@@ -38,6 +38,7 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
+    '@nuxtjs/dotenv',
   ],
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
@@ -47,9 +48,9 @@ export default {
       dark: true,
       themes: {
         dark: {
-          primary: colors.blue.darken2,
+          primary: colors.red.darken4,
           accent: colors.grey.darken3,
-          secondary: colors.amber.darken3,
+          secondary: colors.red.lighten4,
           info: colors.teal.lighten1,
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
@@ -61,5 +62,9 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-  }
+  },
+
+  server: {
+    port: process.env.PORT,
+  },
 }
