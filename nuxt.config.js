@@ -55,7 +55,16 @@ export default {
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
           success: colors.green.accent3
-        }
+        },
+        light: { // Tema light
+          primary: colors.red.lighten3, // Tom mais claro de vermelho
+          accent: colors.grey.lighten4, // Tom mais claro de cinza
+          secondary: colors.red.darken2, // Tom mais escuro de vermelho para contraste
+          info: colors.blue.lighten2,  // Tom mais claro de azul
+          warning: colors.yellow.lighten2, // Tom mais claro de amarelo
+          error: colors.red.accent2,  // Tom de vermelho para erro
+          success: colors.green.lighten3, // Tom mais claro de verde
+        },
       }
     }
   },
