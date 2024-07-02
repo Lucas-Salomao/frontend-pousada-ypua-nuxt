@@ -49,6 +49,10 @@
 <script>
 import axios from 'axios';
 
+const api = axios.create({
+    baseURL: process.env.API_ENDPOINT,
+});
+
 export default {
     data: () => ({
         valid: false,
@@ -86,7 +90,7 @@ export default {
         async registrar() {
             if (this.$refs.form.validate()) {
                 try {
-                    const response = await axios.post('http://localhost:3000/usuarios', {
+                    const response = await api.post('/usuario', {
                         nome: this.nome,
                         email: this.email,
                         senha: this.senha,
@@ -102,7 +106,7 @@ export default {
                         role: 'usuario', // Defina o papel padrão aqui
                     });
                     console.log('Usuário registrado:', response.data);
-                    this.$router.push('/login'); // Redireciona para a página de login após o registro
+                    //this.$router.push('/login'); // Redireciona para a página de login após o registro
                 } catch (error) {
                     console.error('Erro ao registrar usuário:', error);
                     // Exiba uma mensagem de erro para o usuário
