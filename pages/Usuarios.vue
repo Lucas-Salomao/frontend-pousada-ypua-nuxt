@@ -1,48 +1,83 @@
 <template>
     <v-container>
-        <v-row justify="center">
-            <v-col cols="12" md="6">
-                <v-card class="pa-5">
-                    <v-card-title class="headline text-center">
-                        Registro de Usuário
+        <v-row>
+            <v-col>
+                <v-card>
+                    <v-card-title>
+                        Usuários
+                        <v-spacer />
+                        <v-btn color="primary" @click="dialog = true">Novo Usuário</v-btn>
                     </v-card-title>
-                    <v-card-text>
-                        <v-form ref="form" v-model="valid" lazy-validation>
-                            <v-text-field v-model="nome" label="Nome Completo" :rules="nomeRules"
-                                required></v-text-field>
-                            <v-text-field v-model="email" label="Email" :rules="emailRules" required></v-text-field>
-
-                            <v-text-field v-model="senha" label="Senha" :rules="senhaRules" type="password"
-                                required></v-text-field>
-
-                            <v-text-field v-model="rg" label="RG" :rules="rgRules" required></v-text-field>
-
-                            <v-text-field v-model="cpf" label="CPF" :rules="cpfRules" required></v-text-field>
-
-                            <v-text-field v-model="rua" label="Rua" :rules="ruaRules" required></v-text-field>
-
-                            <v-text-field v-model="numero" label="Número" :rules="numeroRules" required></v-text-field>
-
-                            <v-text-field v-model="complemento" label="Complemento"></v-text-field>
-
-                            <v-text-field v-model="bairro" label="Bairro" :rules="bairroRules" required></v-text-field>
-
-                            <v-text-field v-model="cidade" label="Cidade" :rules="cidadeRules" required></v-text-field>
-
-                            <v-text-field v-model="estado" label="Estado" :rules="estadoRules" required></v-text-field>
-
-                            <v-text-field v-model="pais" label="País" :rules="paisRules" required></v-text-field>
-
-                            <v-btn :disabled="!valid" color="success" class="mr-4" @click="registrar">
-                                Registrar
-                            </v-btn>
-
-                            <v-btn color="error" @click="limparFormulario"> Limpar </v-btn>
-                        </v-form>
-                    </v-card-text>
+                    <v-data-table :headers="headers" :items="usuarios" :items-per-page="5" class="elevation-1">
+                        <template v-slot:item.acoes="{ item }">
+                            <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
+                            <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
+                        </template>
+                    </v-data-table>
                 </v-card>
             </v-col>
         </v-row>
+
+        <v-dialog v-model="dialog" max-width="500px">
+            <v-card>
+                <v-card-title>
+                    <span class="headline">{{ formTitle }}</span>
+                </v-card-title>
+                <v-card-text>
+                    <v-container>
+                        <v-row>
+                            <v-col cols="12">
+                                <v-text-field v-model="editedItem.nome" label="Nome" required></v-text-field>
+                            </v-col>
+                            <v-col cols="12">
+                                <v-text-field v-model="editedItem.email" label="Email" required></v-text-field>
+                            </v-col>
+                            <v-col cols="12">
+                                <v-text-field v-model="editedItem.senha" label="Senha"
+                                    :type="showPassword ? 'text' : 'password'" required append-icon="mdi-eye"
+                                    @click:append="showPassword = !showPassword"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6">
+                                <v-text-field v-model="editedItem.rg" label="RG" required></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6">
+                                <v-text-field v-model="editedItem.cpf" label="CPF" required></v-text-field>
+                            </v-col>
+                            <v-col cols="12">
+                                <v-text-field v-model="editedItem.rua" label="Rua" required></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6">
+                                <v-text-field v-model="editedItem.numero" label="Número" type="number"
+                                    required></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6">
+                                <v-text-field v-model="editedItem.complemento" label="Complemento"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6">
+                                <v-text-field v-model="editedItem.bairro" label="Bairro" required></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6">
+                                <v-text-field v-model="editedItem.cidade" label="Cidade" required></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6">
+                                <v-text-field v-model="editedItem.estado" label="Estado" required></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6">
+                                <v-text-field v-model="editedItem.pais" label="País" required></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="6">
+                                <v-select v-model="editedItem.role" :items="roles" label="Papel" required></v-select>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer />
+                    <v-btn color="blue darken-1" text @click="close">Cancelar</v-btn>
+                    <v-btn color="blue darken-1" text @click="save">Salvar</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </v-container>
 </template>
 
@@ -54,63 +89,119 @@ const api = axios.create({
 });
 
 export default {
-    data: () => ({
-        valid: false,
-        nome: '',
-        email: '',
-        senha: '',
-        rg: '',
-        cpf: '',
-        rua: '',
-        numero: '',
-        complemento: '',
-        bairro: '',
-        cidade: '',
-        estado: '',
-        pais: '',
-        nomeRules: [(v) => !!v || 'Nome é obrigatório'],
-        emailRules: [
-            (v) => !!v || 'Email é obrigatório',
-            (v) => /.+@.+\..+/.test(v) || 'Email deve ser válido',
-        ],
-        senhaRules: [(v) => !!v || 'Senha é obrigatória'],
-        rgRules: [(v) => !!v || 'RG é obrigatório'],
-        cpfRules: [(v) => !!v || 'CPF é obrigatório'],
-        ruaRules: [(v) => !!v || 'Rua é obrigatória'],
-        numeroRules: [(v) => !!v || 'Número é obrigatório'],
-        bairroRules: [(v) => !!v || 'Bairro é obrigatório'],
-        cidadeRules: [(v) => !!v || 'Cidade é obrigatória'],
-        estadoRules: [(v) => !!v || 'Estado é obrigatório'],
-        paisRules: [(v) => !!v || 'País é obrigatório'],
-    }),
-    methods: {
-        limparFormulario() {
-            this.$refs.form.reset();
+    data() {
+        return {
+            dialog: false,
+            showPassword: false,
+            headers: [
+                { text: 'ID', value: 'id' },
+                { text: 'Nome', value: 'nome' },
+                { text: 'Email', value: 'email' },
+                { text: 'RG', value: 'rg' },
+                { text: 'CPF', value: 'cpf' },
+                { text: 'Papel', value: 'role' },
+                { text: 'Ações', value: 'acoes', sortable: false },
+            ],
+            usuarios: [],
+            roles: ['admin', 'usuario'], // Defina os papéis disponíveis
+            editedIndex: -1,
+            editedItem: {
+                nome: '',
+                email: '',
+                senha: '',
+                rg: '',
+                cpf: '',
+                rua: '',
+                numero: '',
+                complemento: '',
+                bairro: '',
+                cidade: '',
+                estado: '',
+                pais: '',
+                role: '',
+            },
+            defaultItem: {
+                nome: '',
+                email: '',
+                senha: '',
+                rg: '',
+                cpf: '',
+                rua: '',
+                numero: '',
+                complemento: '',
+                bairro: '',
+                cidade: '',
+                estado: '',
+                pais: '',
+                role: '',
+            },
+        };
+    },
+    computed: {
+        formTitle() {
+            return this.editedIndex === -1 ? 'Novo Usuário' : 'Editar Usuário';
         },
-        async registrar() {
-            if (this.$refs.form.validate()) {
-                try {
-                    const response = await api.post('/usuario', {
-                        nome: this.nome,
-                        email: this.email,
-                        senha: this.senha,
-                        rg: this.rg,
-                        cpf: this.cpf,
-                        rua: this.rua,
-                        numero: this.numero,
-                        complemento: this.complemento,
-                        bairro: this.bairro,
-                        cidade: this.cidade,
-                        estado: this.estado,
-                        pais: this.pais,
-                        role: 'usuario', // Defina o papel padrão aqui
+    },
+    mounted() {
+        this.fetchUsuarios();
+    },
+    methods: {
+        async fetchUsuarios() {
+            try {
+                const response = await api.get('/usuario');
+                this.usuarios = response.data;
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        editItem(item) {
+            this.editedIndex = this.usuarios.indexOf(item);
+            this.editedItem = Object.assign({}, item);
+            this.dialog = true;
+        },
+        deleteItem(item) {
+            const index = this.usuarios.indexOf(item);
+            confirm('Tem certeza de que deseja excluir este usuário?') &&
+            api
+                    .delete(`/usuario/${item.id}`)
+                    .then(() => {
+                        this.usuarios.splice(index, 1);
+                    })
+                    .catch((error) => {
+                        console.error(error);
                     });
-                    console.log('Usuário registrado:', response.data);
-                    //this.$router.push('/login'); // Redireciona para a página de login após o registro
-                } catch (error) {
-                    console.error('Erro ao registrar usuário:', error);
-                    // Exiba uma mensagem de erro para o usuário
-                }
+        },
+        close() {
+            this.dialog = false;
+            this.$nextTick(() => {
+                this.editedItem = Object.assign({}, this.defaultItem);
+                this.editedIndex = -1;
+                this.showPassword = false;
+            });
+        },
+        save() {
+            if (this.editedIndex > -1) {
+                // Atualizar usuário existente
+                api
+                    .put(`/usuario/${this.editedItem.id}`, this.editedItem)
+                    .then(() => {
+                        Object.assign(this.usuarios[this.editedIndex], this.editedItem);
+                        this.close();
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+            } else {
+                // Criar novo usuário
+                api
+                    .post('/usuario', this.editedItem)
+                    .then((response) => {
+                        this.usuarios.push(response.data);
+                        this.close();
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
             }
         },
     },
