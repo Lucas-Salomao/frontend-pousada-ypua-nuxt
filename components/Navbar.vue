@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <v-app-bar app color="primary" dark>
         <v-toolbar-title>Pousada Ypuã</v-toolbar-title>
         <v-spacer />
@@ -9,4 +9,80 @@
         <v-btn text to="/reservas">Reservas</v-btn>
         <v-btn text to="/relatorios">Relatórios</v-btn>
     </v-app-bar>
+</template> -->
+
+<template>
+    <v-app>
+        <v-navigation-drawer app v-model="drawer" clipped temporary>
+            <v-list dense>
+                <v-list-item link to="/">
+                    <v-list-item-icon>
+                        <v-icon>mdi-home</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                        <v-list-item-title>Home</v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+                <v-list-item link to="/usuarios">
+                    <v-list-item-icon>
+                        <v-icon>mdi-account-circle</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                        <v-list-item-title>Usuários</v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+                <v-list-item link to="/hospedes">
+                    <v-list-item-icon>
+                        <v-icon>mdi-account-group</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                        <v-list-item-title>Hóspedes</v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+                <v-list-item link to="/acomodacoes">
+                    <v-list-item-icon>
+                        <v-icon>mdi-bed</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                        <v-list-item-title>Acomodações</v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+                <v-list-item link to="/reservas">
+                    <v-list-item-icon>
+                        <v-icon>mdi-calendar-check</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                        <v-list-item-title>Reservas</v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+                <v-list-item link to="/relatorios">
+                    <v-list-item-icon>
+                        <v-icon>mdi-file-chart</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                        <v-list-item-title>Relatórios</v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+            </v-list>
+        </v-navigation-drawer>
+
+        <v-app-bar app color="primary" dark>
+            <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+            <v-toolbar-title>Pousada Ypuã</v-toolbar-title>
+        </v-app-bar>
+
+        <v-main>
+            <v-container>
+                <Nuxt />
+            </v-container>
+        </v-main>
+    </v-app>
 </template>
+
+<script>
+export default {
+    data: () => ({
+        drawer: false,
+    }),
+};
+</script>
