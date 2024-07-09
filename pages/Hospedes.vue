@@ -64,8 +64,8 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn color="blue darken-1" text @click="close">Cancelar</v-btn>
-          <v-btn color="blue darken-1" text @click="save">Salvar</v-btn>
+          <v-btn color="red darken-1" text @click="close">Cancelar</v-btn>
+          <v-btn color="green darken-1" text @click="save">Salvar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
