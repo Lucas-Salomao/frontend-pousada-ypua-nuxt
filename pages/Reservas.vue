@@ -134,7 +134,7 @@ export default {
       usuarios: [],
       acomodacoes: [],
       hospedes: [],
-      statusOptions: ['EM_PROCESSAMENTO', 'RESERVADO', 'CANCELADO', 'CONCLUIDO'],
+      statusOptions: ['EM PROCESSAMENTO', 'RESERVADO', 'CANCELADO', 'CONCLUIDO'],
       editedIndex: -1,
       editedItem: {
         usuarioId: null,
@@ -142,7 +142,7 @@ export default {
         hospedeIds: [],
         dataEntrada: new Date().toISOString().substr(0, 10),
         dataSaida: new Date().toISOString().substr(0, 10),
-        status: 'EM_PROCESSAMENTO',
+        status: 'EM PROCESSAMENTO',
         valorTotal: 0,
       },
       defaultItem: {
@@ -151,7 +151,7 @@ export default {
         hospedeIds: [],
         dataEntrada: new Date().toISOString().substr(0, 10),
         dataSaida: new Date().toISOString().substr(0, 10),
-        status: 'EM_PROCESSAMENTO',
+        status: 'EM PROCESSAMENTO',
         valorTotal: 0,
       },
     };
