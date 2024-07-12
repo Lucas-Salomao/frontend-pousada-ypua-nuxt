@@ -8,23 +8,53 @@
             <v-spacer />
             <v-btn color="primary" @click="dialog = true">Nova Reserva</v-btn>
           </v-card-title>
-          <v-data-table :headers="headers" :items="reservas" :items-per-page="5" class="elevation-1">
+          <v-data-table
+            :headers="headers"
+            :items="reservas"
+            :items-per-page="5"
+            class="elevation-1"
+          >
             <template v-slot:item.usuario="{ item }">
               {{ item.usuario.nome }}
             </template>
             <template v-slot:item.hospedes="{ item }">
               <span v-for="hospede in item.hospedes" :key="hospede.id">
-                {{ hospede.nome }}<br>
+                {{ hospede.nome }}<br />
               </span>
             </template>
             <template v-slot:item.acomodacao="{ item }">
               {{ item.acomodacao.nome }} (Número: {{ item.acomodacao.numero }})
             </template>
             <template v-slot:item.acoes="{ item }">
-              <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
+              <v-icon small class="mr-2" @click="editItem(item)"
+                >mdi-pencil</v-icon
+              >
               <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
             </template>
           </v-data-table>
+        </v-card>
+      </v-col>
+    </v-row>
+
+    <v-row>
+      <v-col>
+        <v-card>
+          <v-card-title>Receita Total Mensal</v-card-title>
+          <v-card-text>
+            <v-sparkline
+              :value="value"
+              :gradient="gradient"
+              :smooth="radius || false"
+              :padding="padding"
+              :line-width="width"
+              :stroke-linecap="lineCap"
+              :gradient-direction="gradientDirection"
+              :fill="fill"
+              :type="type"
+              :auto-line-width="autoLineWidth"
+              auto-draw
+            ></v-sparkline>
+          </v-card-text>
         </v-card>
       </v-col>
     </v-row>
@@ -38,59 +68,134 @@
           <v-container>
             <v-row>
               <v-col cols="12" sm="6">
-                <v-select v-model="editedItem.usuarioId" :items="usuarios" item-text="nome" item-value="id"
-                  label="Usuário" required></v-select>
+                <v-select
+                  v-model="editedItem.usuarioId"
+                  :items="usuarios"
+                  item-text="nome"
+                  item-value="id"
+                  label="Usuário"
+                  required
+                ></v-select>
               </v-col>
               <v-col cols="12" sm="6">
-                <v-select v-model="editedItem.acomodacaoId" :items="acomodacoes" item-text="nome" item-value="id"
-                  label="Acomodação" required></v-select>
+                <v-select
+                  v-model="editedItem.acomodacaoId"
+                  :items="acomodacoes"
+                  item-text="nome"
+                  item-value="id"
+                  label="Acomodação"
+                  required
+                ></v-select>
               </v-col>
               <v-col cols="12" sm="6">
-                <v-menu ref="menuDataEntrada" v-model="menuDataEntrada" :close-on-content-click="false"
-                  :return-value.sync="editedItem.dataEntrada" transition="scale-transition" offset-y min-width="auto">
+                <v-menu
+                  ref="menuDataEntrada"
+                  v-model="menuDataEntrada"
+                  :close-on-content-click="false"
+                  :return-value.sync="editedItem.dataEntrada"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+                >
                   <template v-slot:activator="{ on, attrs }">
-                    <v-text-field v-model="editedItem.dataEntrada" label="Data de Entrada" readonly v-bind="attrs"
-                      v-on="on"></v-text-field>
+                    <v-text-field
+                      v-model="editedItem.dataEntrada"
+                      label="Data de Entrada"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                    ></v-text-field>
                   </template>
-                  <v-date-picker v-model="editedItem.dataEntrada" no-title scrollable>
+                  <v-date-picker
+                    v-model="editedItem.dataEntrada"
+                    no-title
+                    scrollable
+                  >
                     <v-spacer></v-spacer>
-                    <v-btn text color="primary" @click="menuDataEntrada = false">
+                    <v-btn
+                      text
+                      color="primary"
+                      @click="menuDataEntrada = false"
+                    >
                       Cancelar
                     </v-btn>
-                    <v-btn text color="primary" @click="$refs.menuDataEntrada.save(editedItem.dataEntrada)">
+                    <v-btn
+                      text
+                      color="primary"
+                      @click="
+                        $refs.menuDataEntrada.save(editedItem.dataEntrada)
+                      "
+                    >
                       OK
                     </v-btn>
                   </v-date-picker>
                 </v-menu>
               </v-col>
               <v-col cols="12" sm="6">
-                <v-menu ref="menuDataSaida" v-model="menuDataSaida" :close-on-content-click="false"
-                  :return-value.sync="editedItem.dataSaida" transition="scale-transition" offset-y min-width="auto">
+                <v-menu
+                  ref="menuDataSaida"
+                  v-model="menuDataSaida"
+                  :close-on-content-click="false"
+                  :return-value.sync="editedItem.dataSaida"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+                >
                   <template v-slot:activator="{ on, attrs }">
-                    <v-text-field v-model="editedItem.dataSaida" label="Data de Saída" readonly v-bind="attrs"
-                      v-on="on"></v-text-field>
+                    <v-text-field
+                      v-model="editedItem.dataSaida"
+                      label="Data de Saída"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                    ></v-text-field>
                   </template>
-                  <v-date-picker v-model="editedItem.dataSaida" no-title scrollable>
+                  <v-date-picker
+                    v-model="editedItem.dataSaida"
+                    no-title
+                    scrollable
+                  >
                     <v-spacer></v-spacer>
                     <v-btn text color="primary" @click="menuDataSaida = false">
                       Cancelar
                     </v-btn>
-                    <v-btn text color="primary" @click="$refs.menuDataSaida.save(editedItem.dataSaida)">
+                    <v-btn
+                      text
+                      color="primary"
+                      @click="$refs.menuDataSaida.save(editedItem.dataSaida)"
+                    >
                       OK
                     </v-btn>
                   </v-date-picker>
                 </v-menu>
               </v-col>
               <v-col cols="12" sm="6">
-                <v-select v-model="editedItem.status" :items="statusOptions" label="Status" required></v-select>
+                <v-select
+                  v-model="editedItem.status"
+                  :items="statusOptions"
+                  label="Status"
+                  required
+                ></v-select>
               </v-col>
               <v-col cols="12" sm="6">
-                <v-text-field v-model="editedItem.valorTotal" label="Valor Total" type="number" prefix="R$"
-                  required></v-text-field>
+                <v-text-field
+                  v-model="editedItem.valorTotal"
+                  label="Valor Total"
+                  type="number"
+                  prefix="R$"
+                  required
+                ></v-text-field>
               </v-col>
               <v-col cols="12">
-                <v-autocomplete v-model="editedItem.hospedeIds" :items="hospedes" item-text="nome" item-value="id"
-                  label="Hóspedes" multiple chips></v-autocomplete>
+                <v-autocomplete
+                  v-model="editedItem.hospedeIds"
+                  :items="hospedes"
+                  item-text="nome"
+                  item-value="id"
+                  label="Hóspedes"
+                  multiple
+                  chips
+                ></v-autocomplete>
               </v-col>
             </v-row>
           </v-container>
@@ -106,7 +211,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 const api = axios.create({
   baseURL: process.env.API_ENDPOINT,
@@ -119,22 +224,29 @@ export default {
       menuDataEntrada: false,
       menuDataSaida: false,
       headers: [
-        { text: 'ID', value: 'id' },
-        { text: 'Código', value: 'codigo' },
-        { text: 'Usuário', value: 'usuario' },
-        { text: 'Acomodação', value: 'acomodacao' },
-        { text: 'Hóspedes', value: 'hospedes' },
-        { text: 'Data Entrada', value: 'dataEntrada' },
-        { text: 'Data Saída', value: 'dataSaida' },
-        { text: 'Status', value: 'status' },
-        { text: 'Valor Total', value: 'valorTotal' },
-        { text: 'Ações', value: 'acoes', sortable: false },
+        { text: "ID", value: "id", width: "auto" },
+        { text: "Código", value: "codigo", width: "auto" },
+        { text: "Usuário", value: "usuario", width: "auto" },
+        { text: "Acomodação", value: "acomodacao", width: "auto" },
+        { text: "Hóspedes", value: "hospedes", width: "auto" },
+        { text: "Data Entrada", value: "dataEntrada", width: "auto" },
+        { text: "Data Saída", value: "dataSaida", width: "auto" },
+        { text: "Status", value: "status", width: "auto" },
+        { text: "Valor Total", value: "valorTotal", width: "auto" },
+        { text: "Ações", value: "acoes", sortable: false },
       ],
+      custoMensal: [], // Array para armazenar o custo total de cada mês
+      gradient: ["#FF0000", "#00FF00"], // Define o gradiente do sparkline
       reservas: [],
       usuarios: [],
       acomodacoes: [],
       hospedes: [],
-      statusOptions: ['EM PROCESSAMENTO', 'RESERVADO', 'CANCELADO', 'CONCLUIDO'],
+      statusOptions: [
+        "EM PROCESSAMENTO",
+        "RESERVADO",
+        "CANCELADO",
+        "CONCLUIDO",
+      ],
       editedIndex: -1,
       editedItem: {
         usuarioId: null,
@@ -142,7 +254,7 @@ export default {
         hospedeIds: [],
         dataEntrada: new Date().toISOString().substr(0, 10),
         dataSaida: new Date().toISOString().substr(0, 10),
-        status: 'EM PROCESSAMENTO',
+        status: "EM PROCESSAMENTO",
         valorTotal: 0,
       },
       defaultItem: {
@@ -151,14 +263,14 @@ export default {
         hospedeIds: [],
         dataEntrada: new Date().toISOString().substr(0, 10),
         dataSaida: new Date().toISOString().substr(0, 10),
-        status: 'EM PROCESSAMENTO',
+        status: "EM PROCESSAMENTO",
         valorTotal: 0,
       },
     };
   },
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? 'Nova Reserva' : 'Editar Reserva';
+      return this.editedIndex === -1 ? "Nova Reserva" : "Editar Reserva";
     },
   },
   mounted() {
@@ -166,19 +278,22 @@ export default {
     this.fetchUsuarios();
     this.fetchAcomodacoes();
     this.fetchHospedes();
+    this.calcularCustoMensal(); // Chama a função para calcular o custo mensal
   },
   methods: {
     async fetchReservas() {
       try {
-        const response = await api.get('/reserva');
+        const response = await api.get("/reserva");
         this.reservas = response.data;
+        this.calcularCustoMensal();
+        console.log(this.custoMensal);
       } catch (error) {
         console.error(error);
       }
     },
     async fetchUsuarios() {
       try {
-        const response = await api.get('/usuario');
+        const response = await api.get("/usuario");
         this.usuarios = response.data;
       } catch (error) {
         console.error(error);
@@ -186,7 +301,7 @@ export default {
     },
     async fetchAcomodacoes() {
       try {
-        const response = await api.get('/acomodacao');
+        const response = await api.get("/acomodacao");
         this.acomodacoes = response.data;
       } catch (error) {
         console.error(error);
@@ -194,7 +309,7 @@ export default {
     },
     async fetchHospedes() {
       try {
-        const response = await api.get('/hospede');
+        const response = await api.get("/hospede");
         this.hospedes = response.data;
       } catch (error) {
         console.error(error);
@@ -207,7 +322,7 @@ export default {
     },
     deleteItem(item) {
       const index = this.reservas.indexOf(item);
-      confirm('Tem certeza de que deseja excluir esta reserva?') &&
+      confirm("Tem certeza de que deseja excluir esta reserva?") &&
         api
           .delete(`/reserva/${item.id}`)
           .then(() => {
@@ -230,7 +345,7 @@ export default {
         api
           .put(`/reserva/${this.editedItem.id}`, {
             // Envie os dados necessários para a API, incluindo usuarioId, acomodacaoId, hospedeIds, etc.
-            ...this.editedItem
+            ...this.editedItem,
           })
           .then(() => {
             Object.assign(this.reservas[this.editedIndex], this.editedItem);
@@ -242,9 +357,9 @@ export default {
       } else {
         // Criar nova reserva
         api
-          .post('/reserva', {
+          .post("/reserva", {
             // Envie os dados necessários para a API, incluindo usuarioId, acomodacaoId, hospedeIds, etc.
-            ...this.editedItem
+            ...this.editedItem,
           })
           .then((response) => {
             this.reservas.push(response.data);
@@ -254,6 +369,37 @@ export default {
             console.error(error);
           });
       }
+    },
+    calcularCustoMensal() {
+      const custoMensal = Array(12).fill(0); // Inicializa o array com 12 meses com custo 0
+      const dataAtual = new Date();
+      const anoAtual = dataAtual.getFullYear();
+      const meses = [
+        "Janeiro",
+        "Fevereiro",
+        "Março",
+        "Abril",
+        "Maio",
+        "Junho",
+        "Julho",
+        "Agosto",
+        "Setembro",
+        "Outubro",
+        "Novembro",
+        "Dezembro",
+      ];
+
+      this.reservas.forEach((reserva) => {
+        const dataEntrada = new Date(reserva.dataEntrada);
+        const mesEntrada = dataEntrada.getMonth();
+        const anoEntrada = dataEntrada.getFullYear();
+
+        if (anoEntrada === anoAtual) {
+          custoMensal[mesEntrada] += reserva.valorTotal;
+        }
+      });
+
+      this.custoMensal = custoMensal; // Atualiza o array custoMensal
     },
   },
 };
