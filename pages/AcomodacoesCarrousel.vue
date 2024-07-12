@@ -15,6 +15,7 @@
             <v-carousel-item
               v-for="(acomodacao, index) in acomodacoes"
               :key="index"
+              @click="openModal(acomodacao)"
             >
               <v-card class="fill-height">
                 <v-img
@@ -52,6 +53,97 @@
         </v-card>
       </v-col>
     </v-row>
+
+    <!-- Modal para exibir detalhes da acomodação -->
+    <v-dialog v-model="modalAcomodacao" max-width="800px">
+      <v-card>
+        <v-card-title class="text-h5">
+          {{ selectedAcomodacao.nome }}
+        </v-card-title>
+        <v-divider></v-divider>
+        <v-card-text>
+          <v-row>
+            <v-col cols="12" md="6">
+              <!-- Carrossel de imagens -->
+              <v-carousel v-model="currentImage" cycle height="300">
+                <v-carousel-item
+                  v-for="(foto, fotoIndex) in selectedAcomodacao.fotos"
+                  :key="fotoIndex"
+                >
+                  <v-img
+                    :src="`data:${foto.tipo};base64,${encodeBase64(
+                      foto.imagem.data
+                    )}`"
+                    height="300"
+                    cover
+                  ></v-img>
+                </v-carousel-item>
+              </v-carousel>
+            </v-col>
+            <v-col cols="12" md="6">
+              <p>Descrição: {{ selectedAcomodacao.descricao }}</p>
+              <p>Capacidade: {{ selectedAcomodacao.capacidade }}</p>
+              <p>Preço: R$ {{ selectedAcomodacao.preco }}</p>
+
+              <!-- Informações adicionais com ícones -->
+              <div v-if="selectedAcomodacao.comAcessibilidade">
+                <v-icon>mdi-wheelchair-accessibility</v-icon> Acessibilidade
+              </div>
+              <div v-if="selectedAcomodacao.comChuveiro">
+                <v-icon>mdi-shower</v-icon> Chuveiro
+              </div>
+              <div v-if="selectedAcomodacao.comBanheira">
+                <v-icon>mdi-bathtub</v-icon> Banheira
+              </div>
+              <div v-if="selectedAcomodacao.comToalhas">
+                <v-icon>mdi-towels</v-icon> Toalhas
+              </div>
+              <div v-if="selectedAcomodacao.comSecador">
+                <v-icon>mdi-hair-dryer</v-icon> Secador
+              </div>
+              <div v-if="selectedAcomodacao.comCozinha">
+                <v-icon>mdi-silverware-fork-knife</v-icon> Cozinha
+              </div>
+              <div v-if="selectedAcomodacao.comRestaurante">
+                <v-icon>mdi-food</v-icon> Restaurante
+              </div>
+              <div v-if="selectedAcomodacao.comArCondicionado">
+                <v-icon>mdi-air-conditioner</v-icon> Ar Condicionado
+              </div>
+              <div v-if="selectedAcomodacao.comAquecedor">
+                <v-icon>mdi-radiator</v-icon> Aquecedor
+              </div>
+              <div v-if="selectedAcomodacao.comTV">
+                <v-icon>mdi-television</v-icon> TV ({{
+                  selectedAcomodacao.tamanhoTV
+                }}
+                polegadas)
+              </div>
+              <div v-if="selectedAcomodacao.comWifi">
+                <v-icon>mdi-wifi</v-icon> Wi-Fi
+              </div>
+              <div v-if="selectedAcomodacao.comFrigobar">
+                <v-icon>mdi-fridge</v-icon> Frigobar
+              </div>
+              <div v-if="selectedAcomodacao.comCofre">
+                <v-icon>mdi-safe</v-icon> Cofre
+              </div>
+              <div v-if="selectedAcomodacao.comVaranda">
+                <v-icon>mdi-balcony</v-icon> Varanda
+              </div>
+
+              <!-- ... (Adicione mais detalhes da acomodação aqui, se necessário) ... -->
+            </v-col>
+          </v-row>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="modalAcomodacao = false">
+            Fechar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <v-dialog v-model="dialog" max-width="700px">
       <v-card>
@@ -307,6 +399,9 @@ const api = axios.create({
 export default {
   data() {
     return {
+      modalAcomodacao: false, // Controla a visibilidade do modal
+      selectedAcomodacao: {}, // Armazena a acomodação selecionada
+
       dialog: false,
       headers: [
         { text: "ID", value: "id" },
@@ -453,6 +548,10 @@ export default {
       } catch (error) {
         console.error(error);
       }
+    },
+    openModal(acomodacao) {
+      this.selectedAcomodacao = acomodacao;
+      this.modalAcomodacao = true;
     },
   },
 };
