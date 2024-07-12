@@ -14,7 +14,7 @@ O sistema oferece funcionalidades completas para gerenciar diversos aspectos da 
 
 ### Funcionamento
 
-[<img src="https://i.ytimg.com/vi/Hc79sDi3f0U/maxresdefault.jpg" width="50%">](https://youtu.be/9bka-xIPfII "Funcionamento")
+[<img src="./assets/homescreen.png" width="100%">](https://youtu.be/9bka-xIPfII "Funcionamento")
 
 
 ### Pré-requisitos
