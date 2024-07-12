@@ -36,29 +36,6 @@
       </v-col>
     </v-row>
 
-    <v-row>
-      <v-col>
-        <v-card>
-          <v-card-title>Receita Total Mensal</v-card-title>
-          <v-card-text>
-            <v-sparkline
-              :value="value"
-              :gradient="gradient"
-              :smooth="radius || false"
-              :padding="padding"
-              :line-width="width"
-              :stroke-linecap="lineCap"
-              :gradient-direction="gradientDirection"
-              :fill="fill"
-              :type="type"
-              :auto-line-width="autoLineWidth"
-              auto-draw
-            ></v-sparkline>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-
     <v-dialog v-model="dialog" max-width="500px">
       <v-card>
         <v-card-title>
@@ -235,8 +212,6 @@ export default {
         { text: "Valor Total", value: "valorTotal", width: "auto" },
         { text: "Ações", value: "acoes", sortable: false },
       ],
-      custoMensal: [], // Array para armazenar o custo total de cada mês
-      gradient: ["#FF0000", "#00FF00"], // Define o gradiente do sparkline
       reservas: [],
       usuarios: [],
       acomodacoes: [],
@@ -278,14 +253,12 @@ export default {
     this.fetchUsuarios();
     this.fetchAcomodacoes();
     this.fetchHospedes();
-    this.calcularCustoMensal(); // Chama a função para calcular o custo mensal
   },
   methods: {
     async fetchReservas() {
       try {
         const response = await api.get("/reserva");
         this.reservas = response.data;
-        this.calcularCustoMensal();
         console.log(this.custoMensal);
       } catch (error) {
         console.error(error);
@@ -369,37 +342,6 @@ export default {
             console.error(error);
           });
       }
-    },
-    calcularCustoMensal() {
-      const custoMensal = Array(12).fill(0); // Inicializa o array com 12 meses com custo 0
-      const dataAtual = new Date();
-      const anoAtual = dataAtual.getFullYear();
-      const meses = [
-        "Janeiro",
-        "Fevereiro",
-        "Março",
-        "Abril",
-        "Maio",
-        "Junho",
-        "Julho",
-        "Agosto",
-        "Setembro",
-        "Outubro",
-        "Novembro",
-        "Dezembro",
-      ];
-
-      this.reservas.forEach((reserva) => {
-        const dataEntrada = new Date(reserva.dataEntrada);
-        const mesEntrada = dataEntrada.getMonth();
-        const anoEntrada = dataEntrada.getFullYear();
-
-        if (anoEntrada === anoAtual) {
-          custoMensal[mesEntrada] += reserva.valorTotal;
-        }
-      });
-
-      this.custoMensal = custoMensal; // Atualiza o array custoMensal
     },
   },
 };
