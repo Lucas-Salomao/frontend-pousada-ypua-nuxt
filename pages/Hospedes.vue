@@ -54,7 +54,7 @@
                 <v-text-field v-model="editedItem.cidade" label="Cidade" required></v-text-field>
               </v-col>
               <v-col cols="12">
-                <v-text-field v-model="editedItem.estado" label="Estado" required></v-text-field>
+                <v-select v-model="editedItem.estado" :items="estadosSiglas" label="Estado" required></v-select>
               </v-col>
               <v-col cols="12">
                 <v-text-field v-model="editedItem.pais" label="País" required></v-text-field>
@@ -93,6 +93,7 @@ export default {
       ],
       hospedes: [],
       editedIndex: -1,
+      estadosSiglas : ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RR', 'RO', 'RJ', 'RN', 'RS', 'SC', 'SP', 'SE', 'TO'],
       editedItem: {
         nome: '',
         email: '',
