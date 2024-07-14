@@ -268,13 +268,57 @@ export default {
     this.fetchAcomodacoes();
     this.fetchHospedes();
   },
+  created() {
+    this.atualizarValorTotal(); // Define o valor total inicial
+  },
+  watch: {
+    "editedItem.dataEntrada": {
+      handler(novoValor) {
+        this.atualizarValorTotal();
+      },
+    },
+    "editedItem.dataSaida": {
+      handler(novoValor) {
+        this.atualizarValorTotal();
+      },
+    },
+  },
   methods: {
+    calcularValorTotal(dataEntrada, dataSaida, precoAcomodacao) {
+      const dataEntradaObj = new Date(dataEntrada);
+      const dataSaidaObj = new Date(dataSaida);
+      const diffEmMilissegundos = dataSaidaObj - dataEntradaObj;
+      const diffEmDias = Math.ceil(diffEmMilissegundos / (1000 * 60 * 60 * 24)); // Arredonda para cima
+      return diffEmDias * precoAcomodacao;
+    },
+    atualizarValorTotal() {
+      if (this.editedItem.acomodacaoId) {
+        const acomodacaoSelecionada = this.acomodacoes.find(
+          (acomodacao) => acomodacao.id === this.editedItem.acomodacaoId
+        );
+
+        if (acomodacaoSelecionada) {
+          this.editedItem.valorTotal = this.calcularValorTotal(
+            this.editedItem.dataEntrada,
+            this.editedItem.dataSaida,
+            acomodacaoSelecionada.preco
+          );
+        } else {
+          // Tratar o caso em que a acomodação não é encontrada
+          this.errorMessage = "Acomodação não encontrada.";
+          this.showAlert = true;
+        }
+      } else {
+        // Define o valor total como 0 se a acomodação ainda não foi selecionada
+        this.editedItem.valorTotal = 0;
+      }
+    },
     async fetchReservas() {
       try {
         const response = await api.get("/reserva");
         this.reservas = response.data;
       } catch (error) {
-        this.errorMessage =error.response.data.message
+        this.errorMessage = error.response.data.message;
         this.showAlert = true; // Ativa o alerta
         console.error(error);
       }
@@ -284,7 +328,7 @@ export default {
         const response = await api.get("/usuario");
         this.usuarios = response.data;
       } catch (error) {
-        this.errorMessage =error.response.data.message
+        this.errorMessage = error.response.data.message;
         this.showAlert = true; // Ativa o alerta
         console.error(error);
       }
@@ -294,7 +338,7 @@ export default {
         const response = await api.get("/acomodacao");
         this.acomodacoes = response.data;
       } catch (error) {
-        this.errorMessage =error.response.data.message
+        this.errorMessage = error.response.data.message;
         this.showAlert = true; // Ativa o alerta
         console.error(error);
       }
@@ -304,7 +348,7 @@ export default {
         const response = await api.get("/hospede");
         this.hospedes = response.data;
       } catch (error) {
-        this.errorMessage =error.response.data.message
+        this.errorMessage = error.response.data.message;
         this.showAlert = true; // Ativa o alerta
         console.error(error);
       }
@@ -323,7 +367,7 @@ export default {
             this.reservas.splice(index, 1);
           })
           .catch((error) => {
-            this.errorMessage =error.response.data.message
+            this.errorMessage = error.response.data.message;
             this.showAlert = true; // Ativa o alerta
             console.error(error);
           });
@@ -348,7 +392,7 @@ export default {
             this.close();
           })
           .catch((error) => {
-            this.errorMessage =error.response.data.message
+            this.errorMessage = error.response.data.message;
             this.showAlert = true; // Ativa o alerta
             console.error(error);
           });
@@ -364,7 +408,7 @@ export default {
             this.close();
           })
           .catch((error) => {
-            this.errorMessage =error.response.data.message
+            this.errorMessage = error.response.data.message;
             this.showAlert = true; // Ativa o alerta
             console.error(error);
           });

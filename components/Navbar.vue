@@ -71,6 +71,14 @@
             <v-list-item-title>Relatórios</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item link to="/contato">
+          <v-list-item-icon>
+            <v-icon>mdi-phone</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Contato</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
 
