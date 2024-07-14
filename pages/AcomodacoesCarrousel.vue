@@ -1,6 +1,18 @@
 <template>
   <v-container>
     <v-row>
+      <v-alert
+        v-model="showAlert"
+        border="left"
+        close-text="Close Alert"
+        color="error"
+        dark
+        dismissible
+        shaped
+        >{{ errorMessage }}
+      </v-alert>
+    </v-row>
+    <v-row>
       <v-col>
         <v-card>
           <v-card-title>
@@ -401,7 +413,8 @@ export default {
     return {
       modalAcomodacao: false, // Controla a visibilidade do modal
       selectedAcomodacao: {}, // Armazena a acomodação selecionada
-
+      showAlert: false, // Controla a visibilidade do alerta
+      errorMessage: "", // Armazena a mensagem de erro
       dialog: false,
       headers: [
         { text: "ID", value: "id" },
@@ -478,6 +491,8 @@ export default {
         const response = await api.get(`/acomodacao/`);
         this.acomodacoes = response.data;
       } catch (error) {
+        this.errorMessage =error.response.data.message
+        this.showAlert = true; // Ativa o alerta
         console.error(error);
       }
     },
@@ -495,6 +510,8 @@ export default {
             this.acomodacoes.splice(index, 1);
           })
           .catch((error) => {
+            this.errorMessage =error.response.data.message
+            this.showAlert = true; // Ativa o alerta
             console.error(error);
           });
     },
@@ -546,6 +563,8 @@ export default {
         }
         this.close();
       } catch (error) {
+        this.errorMessage =error.response.data.message
+        this.showAlert = true; // Ativa o alerta
         console.error(error);
       }
     },

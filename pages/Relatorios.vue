@@ -1,5 +1,17 @@
 <template>
   <v-container fluid fill-height>
+    <v-row>
+      <v-alert
+        v-model="showAlert"
+        border="left"
+        close-text="Close Alert"
+        color="error"
+        dark
+        dismissible
+        shaped
+        >{{ errorMessage }}
+      </v-alert>
+    </v-row>
     <v-row justify="center">
       <v-simple-table>
         <template v-slot:default>
@@ -64,6 +76,8 @@ const gradients = [
 export default {
   data() {
     return {
+      showAlert: false, // Controla a visibilidade do alerta
+      errorMessage: "", // Armazena a mensagem de erro
       width: 1,
       radius: 0,
       padding: 8,
@@ -158,6 +172,8 @@ export default {
         this.calcularCustoMensal();
         console.log(this.custoMensal);
       } catch (error) {
+        this.errorMessage = error.response.data.message;
+        this.showAlert = true; // Ativa o alerta
         console.error(error);
       }
     },
@@ -166,6 +182,8 @@ export default {
         const response = await api.get("/usuario");
         this.usuarios = response.data;
       } catch (error) {
+        this.errorMessage = error.response.data.message;
+        this.showAlert = true; // Ativa o alerta
         console.error(error);
       }
     },
@@ -174,6 +192,8 @@ export default {
         const response = await api.get("/acomodacao");
         this.acomodacoes = response.data;
       } catch (error) {
+        this.errorMessage = error.response.data.message;
+        this.showAlert = true; // Ativa o alerta
         console.error(error);
       }
     },
@@ -182,6 +202,8 @@ export default {
         const response = await api.get("/hospede");
         this.hospedes = response.data;
       } catch (error) {
+        this.errorMessage = error.response.data.message;
+        this.showAlert = true; // Ativa o alerta
         console.error(error);
       }
     },
@@ -199,6 +221,8 @@ export default {
             this.reservas.splice(index, 1);
           })
           .catch((error) => {
+            this.errorMessage = error.response.data.message;
+            this.showAlert = true; // Ativa o alerta
             console.error(error);
           });
     },
@@ -222,6 +246,8 @@ export default {
             this.close();
           })
           .catch((error) => {
+            this.errorMessage = error.response.data.message;
+            this.showAlert = true; // Ativa o alerta
             console.error(error);
           });
       } else {
@@ -236,6 +262,8 @@ export default {
             this.close();
           })
           .catch((error) => {
+            this.errorMessage = error.response.data.message;
+            this.showAlert = true; // Ativa o alerta
             console.error(error);
           });
       }

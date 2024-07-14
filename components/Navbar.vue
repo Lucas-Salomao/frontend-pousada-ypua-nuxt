@@ -44,17 +44,17 @@
             <v-icon>mdi-bed</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title>Acomodações Carrousel</v-list-item-title>
+            <v-list-item-title>Acomodações</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item link to="/acomodacoes">
+        <!-- <v-list-item link to="/acomodacoes">
           <v-list-item-icon>
             <v-icon>mdi-bed</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title>Acomodações</v-list-item-title>
           </v-list-item-content>
-        </v-list-item>
+        </v-list-item> -->
         <v-list-item link to="/reservas">
           <v-list-item-icon>
             <v-icon>mdi-calendar-check</v-icon>

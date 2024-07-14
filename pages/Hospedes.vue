@@ -1,6 +1,18 @@
 <template>
   <v-container>
     <v-row>
+      <v-alert
+        v-model="showAlert"
+        border="left"
+        close-text="Close Alert"
+        color="error"
+        dark
+        dismissible
+        shaped
+        >{{ errorMessage }}
+      </v-alert>
+    </v-row>
+    <v-row>
       <v-col>
         <v-card>
           <v-card-title>
@@ -82,6 +94,8 @@ const api = axios.create({
 export default {
   data() {
     return {
+      showAlert: false, // Controla a visibilidade do alerta
+      errorMessage: "", // Armazena a mensagem de erro
       dialog: false,
       headers: [
         { text: 'ID', value: 'id' },
@@ -136,6 +150,8 @@ export default {
         const response = await api.get('/hospede/');
         this.hospedes = response.data;
       } catch (error) {
+        this.errorMessage =error.response.data.message
+        this.showAlert = true; // Ativa o alerta
         console.error(error);
       }
     },
@@ -153,6 +169,8 @@ export default {
             this.hospedes.splice(index, 1);
           })
           .catch((error) => {
+            this.errorMessage =error.response.data.message
+            this.showAlert = true; // Ativa o alerta
             console.error(error);
           });
     },
@@ -172,6 +190,8 @@ export default {
             this.close();
           })
           .catch((error) => {
+            this.errorMessage =error.response.data.message
+            this.showAlert = true; // Ativa o alerta
             console.error(error);
           });
       } else {
@@ -182,6 +202,8 @@ export default {
             this.close();
           })
           .catch((error) => {
+            this.errorMessage =error.response.data.message
+            this.showAlert = true; // Ativa o alerta
             console.error(error);
           });
       }
