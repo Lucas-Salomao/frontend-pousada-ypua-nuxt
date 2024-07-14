@@ -12,23 +12,12 @@
         >{{ errorMessage }}
       </v-alert>
     </v-row>
-    <v-row justify="center">
-      <v-simple-table>
-        <template v-slot:default>
-          <thead>
-            <tr>
-              <th class="text-left">Mês</th>
-              <th class="text-left">Receita</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="item in receitatotal" :key="item.mes">
-              <td>{{ item.mes }}</td>
-              <td>{{ item.receita }}</td>
-            </tr>
-          </tbody>
-        </template>
-      </v-simple-table>
+    <v-row>
+      <v-col>
+        <v-card>
+          <v-card-title>Relatórios</v-card-title>
+        </v-card>
+      </v-col>
     </v-row>
     <v-row>
       <v-col>
@@ -50,6 +39,22 @@
               :auto-line-width="autoLineWidth"
               auto-draw
             ></v-sparkline>
+            <v-simple-table>
+              <template v-slot:default>
+                <thead>
+                  <tr>
+                    <th class="text-left">Mês</th>
+                    <th class="text-left">Receita</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="item in receitatotal" :key="item.mes">
+                    <td>{{ item.mes }}</td>
+                    <td>{{ item.receita }}</td>
+                  </tr>
+                </tbody>
+              </template>
+            </v-simple-table>
           </v-card-text>
         </v-card>
       </v-col>
@@ -170,7 +175,6 @@ export default {
         const response = await api.get("/reserva");
         this.reservas = response.data;
         this.calcularCustoMensal();
-        console.log(this.custoMensal);
       } catch (error) {
         this.errorMessage = error.response.data.message;
         this.showAlert = true; // Ativa o alerta

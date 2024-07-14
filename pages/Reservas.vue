@@ -273,7 +273,6 @@ export default {
       try {
         const response = await api.get("/reserva");
         this.reservas = response.data;
-        console.log(this.custoMensal);
       } catch (error) {
         this.errorMessage =error.response.data.message
         this.showAlert = true; // Ativa o alerta
