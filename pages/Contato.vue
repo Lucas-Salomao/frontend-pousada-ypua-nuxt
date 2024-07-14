@@ -12,7 +12,7 @@
               loading="lazy"
               allowfullscreen
               referrerpolicy="no-referrer-when-downgrade"
-              src="https://www.google.com/maps/embed/v1/place?key=AIzaSyAxcUUSRSMLfHtwOOc7KO7cqQ8quE4QLP4
+              src="https://www.google.com/maps/embed/v1/place?key=
     &q=Pousada+Quinta+do+Ypua,Laguna+SC"
             >
             </iframe>
