@@ -1,6 +1,18 @@
 <template>
   <container>
     <v-row>
+      <v-alert
+        v-model="showAlert"
+        border="left"
+        close-text="Close Alert"
+        color="error"
+        dark
+        dismissible
+        shaped
+        >{{ errorMessage }}
+      </v-alert>
+    </v-row>
+    <v-row>
       <v-col>
         <v-card>
           <v-card-title class="headline">Contato</v-card-title>
@@ -12,8 +24,7 @@
               loading="lazy"
               allowfullscreen
               referrerpolicy="no-referrer-when-downgrade"
-              src="https://www.google.com/maps/embed/v1/place?key=
-    &q=Pousada+Quinta+do+Ypua,Laguna+SC"
+              :src="`https://www.google.com/maps/embed/v1/place?key=${this.googleMapsApiKey}&q=Pousada+Quinta+do+Ypua,Laguna+SC`"
             >
             </iframe>
           </div>
@@ -68,10 +79,13 @@
 </template>
 
 <script>
+import axios from 'axios'; // Importe o axios
 
 export default {
   data: () => ({
-    phonemask: "credit-card",
+    showAlert: false, // Controla a visibilidade do alerta
+    errorMessage: "", // Armazena a mensagem de erro
+    googleMapsApiKey: null,
     valid: false,
     nome: "",
     nameRules: [
@@ -109,5 +123,16 @@ export default {
     ],
     telefone: '',
   }),
+  async mounted() {
+    try {
+      const response = await axios.get('/maps/google-maps-key');
+      this.googleMapsApiKey = response.data.apiKey;
+      console.log(this.googleMapsApiKey);
+    } catch (error) {
+      this.errorMessage =error.response.data.message
+      this.showAlert = true; // Ativa o alerta
+      console.error('Erro ao obter a chave de API:', error);
+    }
+  },
 };
 </script>
