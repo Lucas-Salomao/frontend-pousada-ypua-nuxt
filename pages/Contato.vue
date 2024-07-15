@@ -5,7 +5,8 @@
         v-model="showAlert"
         border="left"
         close-text="Close Alert"
-        color="error"
+        :type="alertType"
+        :color="alertColor"
         dark
         dismissible
         shaped
@@ -19,17 +20,17 @@
           <v-card-title class="headline">Contato</v-card-title>
           <v-card-text>
             <div>
-            <iframe
-              width="100%"
-              height="500"
-              style="border: 2"
-              loading="lazy"
-              allowfullscreen
-              referrerpolicy="no-referrer-when-downgrade"
-              :src="`https://www.google.com/maps/embed/v1/place?key=${this.googleMapsApiKey}&q=Pousada+Quinta+do+Ypua,Laguna+SC`"
-            >
-            </iframe>
-          </div>
+              <iframe
+                width="100%"
+                height="500"
+                style="border: 2"
+                loading="lazy"
+                allowfullscreen
+                referrerpolicy="no-referrer-when-downgrade"
+                :src="`https://www.google.com/maps/embed/v1/place?key=${this.googleMapsApiKey}&q=Pousada+Quinta+do+Ypua,Laguna+SC`"
+              >
+              </iframe>
+            </div>
           </v-card-text>
         </v-card>
         <v-card class="ma-4">
@@ -42,7 +43,7 @@
             Estrada Ipua, nº 6 Laguna - SC | 88790-000<br />
             <strong>(48) 99940-9732 | pousadaquintadoypua@gmail.com</strong>
           </v-card-text>
-          <v-form @submit.prevent>
+          <v-form @submit.prevent="enviarEmail">
             <v-card-text>
               <v-text-field
                 v-model="nome"
@@ -90,6 +91,8 @@ export default {
     return {
       showAlert: false, // Controla a visibilidade do alerta
       errorMessage: "", // Armazena a mensagem de erro
+      alertType:"error",
+      alertColor:"red",
       googleMapsApiKey: null,
       valid: false,
       nome: "",
@@ -98,11 +101,6 @@ export default {
           if (value) return true;
 
           return "Digite o nome e sobrenome";
-        },
-        (value) => {
-          if (value?.length <= 10) return true;
-
-          return "Precisa conter 10 ou mais caracteres";
         },
       ],
       email: "",
@@ -139,8 +137,40 @@ export default {
         this.googleMapsApiKey = response.data.apiKey;
       } catch (error) {
         this.errorMessage = error.response.data.message;
+        this.alertColor="red";
+        this.alertType="error";
         this.showAlert = true; // Ativa o alerta
         console.error("Erro ao obter a chave de API:", error);
+      }
+    },
+    async enviarEmail() {
+      try {
+        // Envie os dados do formulário para o backend
+        const response = await api.post("/email/sendemail", {
+          nome: this.nome,
+          email: this.email,
+          telefone: this.telefone,
+          mensagem: this.mensagem,
+        });
+
+        this.errorMessage = "E-mail enviado com sucesso";
+        this.alertColor="green";
+        this.alertType="success";
+        this.showAlert = true;
+        // Exiba uma mensagem de sucesso (opcional)
+        console.log(response.data);
+        // Limpe o formulário (opcional)
+        this.nome = "";
+        this.email = "";
+        this.telefone = "";
+        this.mensagem = "";
+      } catch (error) {
+        // Exiba um alerta de erro
+        this.errorMessage = error.response.data || "Erro ao enviar email.";
+        this.alertColor="red";
+        this.alertType="error";
+        this.showAlert = true;
+        console.error(error);
       }
     },
   },
