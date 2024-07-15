@@ -1,5 +1,5 @@
 <template>
-  <container>
+  <v-container>
     <v-row>
       <v-alert
         v-model="showAlert"
@@ -9,18 +9,20 @@
         dark
         dismissible
         shaped
+        width="100%"
         >{{ errorMessage }}
       </v-alert>
     </v-row>
     <v-row>
       <v-col>
-        <v-card>
+        <v-card class="ma-4">
           <v-card-title class="headline">Contato</v-card-title>
-          <div>
+          <v-card-text>
+            <div>
             <iframe
               width="100%"
               height="500"
-              style="border: 0"
+              style="border: 2"
               loading="lazy"
               allowfullscreen
               referrerpolicy="no-referrer-when-downgrade"
@@ -28,8 +30,9 @@
             >
             </iframe>
           </div>
+          </v-card-text>
         </v-card>
-        <v-card>
+        <v-card class="ma-4">
           <v-card-title class="headline">Vamos Conversar?</v-card-title>
           <v-card-text>
             Entre em contato com a gente para informações sobre reservas,
@@ -55,10 +58,7 @@
               ></v-text-field>
             </v-card-text>
             <v-card-text>
-              <v-text-field
-                v-model="telefone"
-                label="Telefone"
-              ></v-text-field>
+              <v-text-field v-model="telefone" label="Telefone"></v-text-field>
             </v-card-text>
             <v-card-text>
               <v-textarea
@@ -75,64 +75,74 @@
         </v-card>
       </v-col>
     </v-row>
-  </container>
+  </v-container>
 </template>
 
 <script>
-import axios from 'axios'; // Importe o axios
+import axios from "axios"; // Importe o axios
+
+const api = axios.create({
+  baseURL: process.env.API_ENDPOINT,
+});
 
 export default {
-  data: () => ({
-    showAlert: false, // Controla a visibilidade do alerta
-    errorMessage: "", // Armazena a mensagem de erro
-    googleMapsApiKey: null,
-    valid: false,
-    nome: "",
-    nameRules: [
-      (value) => {
-        if (value) return true;
+  data() {
+    return {
+      showAlert: false, // Controla a visibilidade do alerta
+      errorMessage: "", // Armazena a mensagem de erro
+      googleMapsApiKey: null,
+      valid: false,
+      nome: "",
+      nameRules: [
+        (value) => {
+          if (value) return true;
 
-        return "Digite o nome e sobrenome";
-      },
-      (value) => {
-        if (value?.length <= 10) return true;
+          return "Digite o nome e sobrenome";
+        },
+        (value) => {
+          if (value?.length <= 10) return true;
 
-        return "Precisa conter 10 ou mais caracteres";
-      },
-    ],
-    email: "",
-    emailRules: [
-      (value) => {
-        if (value) return true;
+          return "Precisa conter 10 ou mais caracteres";
+        },
+      ],
+      email: "",
+      emailRules: [
+        (value) => {
+          if (value) return true;
 
-        return "Digite o e-mail";
-      },
-      (value) => {
-        if (/.+@.+\..+/.test(value)) return true;
+          return "Digite o e-mail";
+        },
+        (value) => {
+          if (/.+@.+\..+/.test(value)) return true;
 
-        return "E-mail deve ser válido";
-      },
-    ],
-    mensagem: "",
-    mensagemRules: [
-      (value) => {
-        if (value) return true;
+          return "E-mail deve ser válido";
+        },
+      ],
+      mensagem: "",
+      mensagemRules: [
+        (value) => {
+          if (value) return true;
 
-        return "Digite a mensagem";
-      },
-    ],
-    telefone: '',
-  }),
-  async mounted() {
-    try {
-      const response = await axios.get('/maps/google-maps-key');
-      this.googleMapsApiKey = response.data.apiKey;
-      console.log(this.googleMapsApiKey);
-    } catch (error) {
-      this.errorMessage =error.response.data.message
-      this.showAlert = true; // Ativa o alerta
-      console.error('Erro ao obter a chave de API:', error);
-    }
+          return "Digite a mensagem";
+        },
+      ],
+      telefone: "",
+    };
+  },
+  mounted() {
+    this.getapikey();
+  },
+  methods: {
+    async getapikey() {
+      try {
+        const response = await api.get("/maps/google-maps-key");
+        this.googleMapsApiKey = response.data.apiKey;
+      } catch (error) {
+        this.errorMessage = error.response.data.message;
+        this.showAlert = true; // Ativa o alerta
+        console.error("Erro ao obter a chave de API:", error);
+      }
+    },
   },
 };
 </script>

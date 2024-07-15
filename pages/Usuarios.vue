@@ -9,6 +9,7 @@
         dark
         dismissible
         shaped
+        width="100%"
         >{{ errorMessage }}
       </v-alert>
     </v-row>
