@@ -2,12 +2,12 @@
   <!-- <v-card height="400px"> -->
     <v-footer app v-bind="localAttrs" :padless="padless">
       <v-card flat tile width="100%" class=" primary text-center">
-        <v-card-text>
+        <v-card-text class="py-2 white--text">
             <v-btn v-for="(item, index) in externalLinks" :key="index" class="mx-4" icon :href="item.url" target="_blank">
                 <v-icon size="24px">{{ item.icon }}</v-icon> 
           </v-btn>
         </v-card-text>
-        <v-card-text class="white--text">
+        <v-card-text class="py-2 white--text">
           {{ new Date().getFullYear() }} —
           <strong>© Pousada Quinta do Ypuã</strong>
         </v-card-text>
