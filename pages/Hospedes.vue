@@ -86,13 +86,8 @@
 </template>
 
 <script>
-import axios from 'axios';
-
-const api = axios.create({
-  baseURL: process.env.API_ENDPOINT,
-});
-
 export default {
+  middleware: 'auth',
   data() {
     return {
       showAlert: false, // Controla a visibilidade do alerta
@@ -148,7 +143,7 @@ export default {
   methods: {
     async fetchHospedes() {
       try {
-        const response = await api.get('/hospede/');
+        const response = await this.$axios.get('/hospede/');
         this.hospedes = response.data;
       } catch (error) {
         this.errorMessage =error.response.data.message
@@ -164,7 +159,7 @@ export default {
     deleteItem(item) {
       const index = this.hospedes.indexOf(item);
       confirm('Tem certeza que deseja excluir este hóspede?') &&
-        api
+        this.$axios
           .delete(`/hospede/${item.id}`) // Substitua pelo endpoint da sua API
           .then(() => {
             this.hospedes.splice(index, 1);
@@ -184,7 +179,7 @@ export default {
     },
     save() {
       if (this.editedIndex > -1) {
-        api
+        this.$axios
           .put(`/hospede/${this.editedItem.id}`, this.editedItem) // Substitua pelo endpoint da sua API
           .then(() => {
             Object.assign(this.hospedes[this.editedIndex], this.editedItem);
@@ -196,7 +191,7 @@ export default {
             console.error(error);
           });
       } else {
-        api
+        this.$axios
           .post(`/hospede/`, this.editedItem) // Substitua pelo endpoint da sua API
           .then((response) => {
             this.hospedes.push(response.data);

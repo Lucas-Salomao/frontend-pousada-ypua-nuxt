@@ -201,13 +201,8 @@
 </template>
 
 <script>
-import axios from "axios";
-
-const api = axios.create({
-  baseURL: process.env.API_ENDPOINT,
-});
-
 export default {
+  middleware: 'auth',
   data() {
     return {
       showAlert: false, // Controla a visibilidade do alerta
@@ -316,7 +311,7 @@ export default {
     },
     async fetchReservas() {
       try {
-        const response = await api.get("/reserva");
+        const response = await this.$axios.get("/reserva");
         this.reservas = response.data;
       } catch (error) {
         this.errorMessage = error.response.data.message;
@@ -326,7 +321,7 @@ export default {
     },
     async fetchUsuarios() {
       try {
-        const response = await api.get("/usuario");
+        const response = await this.$axios.get("/usuario");
         this.usuarios = response.data;
       } catch (error) {
         this.errorMessage = error.response.data.message;
@@ -336,7 +331,7 @@ export default {
     },
     async fetchAcomodacoes() {
       try {
-        const response = await api.get("/acomodacao");
+        const response = await this.$axios.get("/acomodacao");
         this.acomodacoes = response.data;
       } catch (error) {
         this.errorMessage = error.response.data.message;
@@ -346,7 +341,7 @@ export default {
     },
     async fetchHospedes() {
       try {
-        const response = await api.get("/hospede");
+        const response = await this.$axios.get("/hospede");
         this.hospedes = response.data;
       } catch (error) {
         this.errorMessage = error.response.data.message;
@@ -362,7 +357,7 @@ export default {
     deleteItem(item) {
       const index = this.reservas.indexOf(item);
       confirm("Tem certeza de que deseja excluir esta reserva?") &&
-        api
+        this.$axios
           .delete(`/reserva/${item.id}`)
           .then(() => {
             this.reservas.splice(index, 1);
@@ -383,7 +378,7 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         // Atualizar reserva existente
-        api
+        this.$axios
           .put(`/reserva/${this.editedItem.id}`, {
             // Envie os dados necessários para a API, incluindo usuarioId, acomodacaoId, hospedeIds, etc.
             ...this.editedItem,
@@ -399,10 +394,11 @@ export default {
           });
       } else {
         // Criar nova reserva
-        api
+        this.$axios
           .post("/reserva", {
             // Envie os dados necessários para a API, incluindo usuarioId, acomodacaoId, hospedeIds, etc.
             ...this.editedItem,
+            valorTotal: this.editedItem.valorTotal.toString(), // Converte valorTotal para string
           })
           .then((response) => {
             this.reservas.push(response.data);

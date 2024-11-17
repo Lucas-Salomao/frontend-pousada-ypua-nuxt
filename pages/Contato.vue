@@ -80,13 +80,8 @@
 </template>
 
 <script>
-import axios from "axios"; // Importe o axios
-
-const api = axios.create({
-  baseURL: process.env.API_ENDPOINT,
-});
-
 export default {
+  middleware: 'auth',
   data() {
     return {
       showAlert: false, // Controla a visibilidade do alerta
@@ -133,7 +128,7 @@ export default {
   methods: {
     async getapikey() {
       try {
-        const response = await api.get("/maps/google-maps-key");
+        const response = await this.$axios.get("/maps/google-maps-key");
         this.googleMapsApiKey = response.data.apiKey;
       } catch (error) {
         this.errorMessage = error.response.data.message;
@@ -146,7 +141,7 @@ export default {
     async enviarEmail() {
       try {
         // Envie os dados do formulário para o backend
-        const response = await api.post("/email/sendemail", {
+        const response = await this.$axios.post("/email/sendemail", {
           nome: this.nome,
           email: this.email,
           telefone: this.telefone,
