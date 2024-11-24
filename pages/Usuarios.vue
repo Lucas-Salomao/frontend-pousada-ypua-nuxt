@@ -156,13 +156,8 @@
 </template>
 
 <script>
-import axios from "axios";
-
-const api = axios.create({
-  baseURL: process.env.API_ENDPOINT,
-});
-
 export default {
+  middleware: 'auth',
   data() {
     return {
       showAlert: false, // Controla a visibilidade do alerta
@@ -253,7 +248,7 @@ export default {
   methods: {
     async fetchUsuarios() {
       try {
-        const response = await api.get("/usuario");
+        const response = await this.$axios.get("/usuario");
         this.usuarios = response.data;
       } catch (error) {
         this.errorMessage =
@@ -270,7 +265,7 @@ export default {
     deleteItem(item) {
       const index = this.usuarios.indexOf(item);
       confirm("Tem certeza de que deseja excluir este usuário?") &&
-        api
+        this.$axios
           .delete(`/usuario/${item.id}`)
           .then(() => {
             this.usuarios.splice(index, 1);
@@ -293,7 +288,7 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         // Atualizar usuário existente
-        api
+        this.$axios
           .put(`/usuario/${this.editedItem.id}`, this.editedItem)
           .then(() => {
             Object.assign(this.usuarios[this.editedIndex], this.editedItem);
@@ -307,7 +302,7 @@ export default {
           });
       } else {
         // Criar novo usuário
-        api
+        this.$axios
           .post("/usuario", this.editedItem)
           .then((response) => {
             this.usuarios.push(response.data);

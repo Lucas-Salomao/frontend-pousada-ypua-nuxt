@@ -39,7 +39,38 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@nuxtjs/dotenv',
+    '@nuxtjs/axios',
+    '@nuxtjs/auth-next'
   ],
+
+  axios: {
+    baseURL: process.env.API_ENDPOINT
+  },
+
+  auth: {
+    strategies: {
+      local: {
+        token: {
+          property: 'token_acesso',
+          global: true,
+          required: true,
+          type: 'Bearer'
+        },
+        user: {
+          property: 'user',
+          autoFetch: true
+        },
+        endpoints: {
+          login: { url: '/login', method: 'post', propertyName: 'token_acesso' },
+          user: { url: '/usuario/me', method: 'get', propertyName: 'user' }
+        }
+      }
+    }
+  },
+
+  router: {
+    middleware: ['auth']
+  },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {

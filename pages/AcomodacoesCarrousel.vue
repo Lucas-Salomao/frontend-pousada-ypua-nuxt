@@ -403,13 +403,8 @@
 </template>
 
 <script>
-import axios from "axios";
-
-const api = axios.create({
-  baseURL: process.env.API_ENDPOINT, // Substitua pelo seu endpoint da API
-});
-
 export default {
+  middleware: 'auth',
   data() {
     return {
       modalAcomodacao: false, // Controla a visibilidade do modal
@@ -489,7 +484,7 @@ export default {
     },
     async fetchAcomodacoes() {
       try {
-        const response = await api.get(`/acomodacao/`);
+        const response = await this.$axios.get(`/acomodacao/`);
         this.acomodacoes = response.data;
       } catch (error) {
         this.errorMessage =error.response.data.message
@@ -541,7 +536,7 @@ export default {
       try {
         if (this.editedIndex > -1) {
           // Editar acomodação (incluindo fotos)
-          const response = await api.put(
+          const response = await this.$axios.put(
             `/acomodacao/${this.editedItem.id}`,
             formData,
             {
@@ -554,7 +549,7 @@ export default {
           Object.assign(this.acomodacoes[this.editedIndex], response.data);
         } else {
           // Criar nova acomodação (incluindo fotos)
-          const response = await api.post(`/acomodacao/`, formData, {
+          const response = await this.$axios.post(`/acomodacao/`, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
             },
