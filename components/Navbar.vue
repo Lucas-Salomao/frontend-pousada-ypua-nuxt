@@ -71,6 +71,22 @@
             <v-list-item-title>Reservas</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item link to="/checkin">
+          <v-list-item-icon>
+            <v-icon>mdi-calendar-check</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Check-in</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item link to="/checkout">
+          <v-list-item-icon>
+            <v-icon>mdi-calendar-check</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Check-out</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
         <v-list-item link to="/relatorios">
           <v-list-item-icon>
             <v-icon>mdi-file-chart</v-icon>
