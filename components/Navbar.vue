@@ -31,7 +31,7 @@
             <v-list-item-title>Sobre</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item link to="/usuarios">
+        <v-list-item v-if="isAuthenticated && isAdmin" link to="/usuarios">
           <v-list-item-icon>
             <v-icon>mdi-account-circle</v-icon>
           </v-list-item-icon>
@@ -39,7 +39,7 @@
             <v-list-item-title>Usuários</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item link to="/hospedes">
+        <v-list-item v-if="isAuthenticated && isAdmin" link to="/hospedes">
           <v-list-item-icon>
             <v-icon>mdi-account-group</v-icon>
           </v-list-item-icon>
@@ -63,7 +63,7 @@
             <v-list-item-title>Acomodações</v-list-item-title>
           </v-list-item-content>
         </v-list-item> -->
-        <v-list-item link to="/reservas">
+        <v-list-item v-if="isAuthenticated && isAdmin" link to="/reservas">
           <v-list-item-icon>
             <v-icon>mdi-calendar-check</v-icon>
           </v-list-item-icon>
@@ -71,7 +71,7 @@
             <v-list-item-title>Reservas</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item link to="/checkin">
+        <v-list-item v-if="isAuthenticated && isAdmin" link to="/checkin">
           <v-list-item-icon>
             <v-icon>mdi-calendar-check</v-icon>
           </v-list-item-icon>
@@ -79,7 +79,7 @@
             <v-list-item-title>Check-in</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item link to="/checkout">
+        <v-list-item v-if="isAuthenticated && isAdmin" link to="/checkout">
           <v-list-item-icon>
             <v-icon>mdi-calendar-check</v-icon>
           </v-list-item-icon>
@@ -87,7 +87,7 @@
             <v-list-item-title>Check-out</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item link to="/relatorios">
+        <v-list-item v-if="isAuthenticated && isAdmin"link to="/relatorios">
           <v-list-item-icon>
             <v-icon>mdi-file-chart</v-icon>
           </v-list-item-icon>
@@ -101,6 +101,30 @@
           </v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title>Contato</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item v-if="!isAuthenticated" text link to="/login">
+          <v-list-item-icon>
+            <v-icon>mdi-account-circle</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Login</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item v-if="isAuthenticated" text link to="/perfil">
+          <v-list-item-icon>
+            <v-icon>mdi-account-circle</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Perfil</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item v-if="isAuthenticated" text @click="logout">
+          <v-list-item-icon>
+            <v-icon>mdi-account-circle</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Logout</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -130,5 +154,20 @@ export default {
   components: {
     Footer,
   },
+  computed: {
+    isAuthenticated() {
+      return this.$store.state.auth.loggedIn;
+    },
+    isAdmin() {
+      return this.$store.state.auth.user.role == 'admin';
+    }
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch('auth/logout').then(() => {
+        this.$router.push('/login');
+      });
+    }
+  }
 };
 </script>

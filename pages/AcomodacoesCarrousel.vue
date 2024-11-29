@@ -19,7 +19,7 @@
           <v-card-title>
             Acomodações
             <v-spacer />
-            <v-btn color="primary" @click="dialog = true">
+            <v-btn v-if="isAuthenticated && isAdmin" color="primary" @click="dialog = true">
               Nova Acomodação
             </v-btn>
           </v-card-title>
@@ -404,7 +404,7 @@
 
 <script>
 export default {
-  middleware: 'auth',
+  // middleware: 'auth',
   data() {
     return {
       modalAcomodacao: false, // Controla a visibilidade do modal
@@ -468,11 +468,18 @@ export default {
       },
       fotos: [], // Array para armazenar as fotos selecionadas
       currentAcomodacao: 0, // Índice da acomodação no carrossel
+      currentImage: null,
     };
   },
   computed: {
     formTitle() {
       return this.editedIndex === -1 ? "Nova Acomodação" : "Editar Acomodação";
+    },
+    isAuthenticated() {
+      return this.$store.state.auth.loggedIn;
+    },
+    isAdmin() {
+      return this.$store.state.auth.user.role == "admin";
     },
   },
   mounted() {
@@ -480,6 +487,7 @@ export default {
   },
   methods: {
     encodeBase64(buffer) {
+      console.log("acomodacao.fotos")
       return btoa(String.fromCharCode(...buffer));
     },
     async fetchAcomodacoes() {

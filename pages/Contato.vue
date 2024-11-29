@@ -81,7 +81,7 @@
 
 <script>
 export default {
-  middleware: 'auth',
+  // middleware: 'auth',
   data() {
     return {
       showAlert: false, // Controla a visibilidade do alerta

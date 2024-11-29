@@ -21,6 +21,7 @@
                 required
               ></v-text-field>
               <v-btn type="submit" color="primary" block>Login</v-btn>
+              <v-btn class="mt-4 dark-grey-text" color="secondary" block @click="redirectToRegister">Cadastrar</v-btn>
             </v-form>
           </v-card-text>
         </v-card>
@@ -50,6 +51,9 @@ export default {
       } catch (error) {
         console.error('Erro ao fazer login:', error)
       }
+    },
+    redirectToRegister() {
+      this.$router.push('/register')
     }
   }
 }
@@ -58,5 +62,9 @@ export default {
 <style scoped>
 .fill-height {
   height: 100vh;
+}
+
+.dark-grey-text {
+  color: #121212 !important; /* Cinza escuro */
 }
 </style>
