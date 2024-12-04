@@ -8,6 +8,9 @@
       <v-btn icon @click="goToLogin">
         <v-icon>mdi-account</v-icon>
       </v-btn>
+      <v-btn icon @click="logout">
+        <v-icon>mdi-logout</v-icon>
+      </v-btn>
     </v-app-bar>
 
     <v-navigation-drawer app v-model="drawer" temporary>
@@ -121,6 +124,17 @@ export default {
   methods: {
     goToLogin() {
       this.$router.push('/login')
+    },
+    async logout() {
+      try {
+        // await this.$axios.post('/auth/logout');
+        await this.$auth.reset()
+        // Opcional: redirecionar após logout
+        this.$router.push('/login')
+      } catch (error) {
+        console.error('Erro ao fazer logout:', error);
+        // Exiba uma mensagem de erro para o usuário (opcional)
+      }
     }
   },
 };
