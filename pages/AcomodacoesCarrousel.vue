@@ -404,7 +404,7 @@
 
 <script>
 export default {
-  middleware: 'auth',
+  // middleware: 'auth',
   data() {
     return {
       modalAcomodacao: false, // Controla a visibilidade do modal
