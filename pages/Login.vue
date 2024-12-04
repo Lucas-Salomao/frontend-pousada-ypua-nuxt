@@ -4,7 +4,7 @@
       <v-col cols="12" sm="8" md="4">
         <v-card>
           <v-card-title>
-            <span class="headline">Login</span>
+            <span class="headline">Digite seu usuário e senha</span>
           </v-card-title>
           <v-card-text>
             <v-form @submit.prevent="login">
@@ -20,7 +20,8 @@
                 type="password"
                 required
               ></v-text-field>
-              <v-btn type="submit" color="primary" block>Login</v-btn>
+              <v-btn type="submit" color="primary" class="mx-2">Entrar</v-btn>
+              <v-btn to="/Cadastro" color="primary" class="mx-2">Cadastre-se</v-btn>
             </v-form>
           </v-card-text>
         </v-card>
