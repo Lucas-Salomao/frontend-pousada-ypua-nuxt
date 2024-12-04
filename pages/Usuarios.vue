@@ -174,7 +174,7 @@ export default {
         { text: "Ações", value: "acoes", sortable: false },
       ],
       usuarios: [],
-      roles: ["admin", "usuario"], // Defina os papéis disponíveis
+      roles: ["admin", "funcionario","usuario"], // Defina os papéis disponíveis
       estadosSiglas: [
         "AC",
         "AL",
