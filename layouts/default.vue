@@ -5,6 +5,7 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title>Pousada Ypuã</v-toolbar-title>
       <v-spacer></v-spacer>
+      <v-text v-if="$auth.loggedIn">{{ $auth.user.email }}</v-text>
       <v-btn icon @click="goToLogin">
         <v-icon>mdi-account</v-icon>
       </v-btn>
