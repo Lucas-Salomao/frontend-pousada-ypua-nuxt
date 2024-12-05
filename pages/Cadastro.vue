@@ -111,8 +111,6 @@
       async cadastrar() {
         try {
           const response = await this.$axios.post("/usuario", this.editedItem);
-          // Exiba uma mensagem de sucesso (opcional)
-          console.log(response.data);
           // Redirecione o usuário para a página de login (opcional)
           this.$router.push("/login"); 
         } catch (error) {
