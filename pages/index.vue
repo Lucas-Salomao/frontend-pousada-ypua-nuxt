@@ -21,8 +21,5 @@
 <script>
 export default {
     //   middleware: 'auth',
-    mounted() {
-        console.log('Index page mounted');
-    }
 }
 </script>
