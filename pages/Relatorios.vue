@@ -74,7 +74,7 @@ const gradients = [
 ];
 
 export default {
-  middleware: 'auth',
+  middleware: ['auth', 'autorizacao'],
   data() {
     return {
       showAlert: false, // Controla a visibilidade do alerta

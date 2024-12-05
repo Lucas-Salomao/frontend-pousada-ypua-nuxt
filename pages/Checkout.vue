@@ -100,7 +100,7 @@
 
 <script>
 export default {
-  middleware: "auth",
+  middleware: ['auth', 'autorizacao'],
   data() {
     return {
       showAlert: false,
