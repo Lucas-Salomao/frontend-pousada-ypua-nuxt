@@ -152,8 +152,6 @@ export default {
         this.alertColor="green";
         this.alertType="success";
         this.showAlert = true;
-        // Exiba uma mensagem de sucesso (opcional)
-        console.log(response.data);
         // Limpe o formulário (opcional)
         this.nome = "";
         this.email = "";
