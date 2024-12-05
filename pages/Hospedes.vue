@@ -1,16 +1,8 @@
 <template>
   <v-container>
     <v-row>
-      <v-alert
-        v-model="showAlert"
-        border="left"
-        close-text="Close Alert"
-        color="error"
-        dark
-        dismissible
-        shaped
-        width="100%"
-        >{{ errorMessage }}
+      <v-alert v-model="showAlert" border="left" close-text="Close Alert" color="error" dark dismissible shaped
+        width="100%">{{ errorMessage }}
       </v-alert>
     </v-row>
     <v-row>
@@ -49,7 +41,11 @@
                 <v-text-field v-model="editedItem.rg" label="RG" required></v-text-field>
               </v-col>
               <v-col cols="12">
-                <v-text-field v-model="editedItem.cpf" label="CPF" required></v-text-field>
+                <v-text-field v-model="editedItem.cpf" label="CPF" required :rules="[
+                  v => !!v || 'CPF é obrigatório',
+                  v => /^\d{11}$/.test(v) || 'CPF deve conter 11 dígitos',
+                  v => validarCPF(v) || 'CPF inválido'
+                ]"></v-text-field>
               </v-col>
               <v-col cols="12">
                 <v-text-field v-model="editedItem.rua" label="Rua" required></v-text-field>
@@ -86,6 +82,7 @@
 </template>
 
 <script>
+import { validarCPF } from '../utils/validarCPF'
 export default {
   middleware: ['auth', 'autorizacao'],
   data() {
@@ -103,7 +100,7 @@ export default {
       ],
       hospedes: [],
       editedIndex: -1,
-      estadosSiglas : ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RR', 'RO', 'RJ', 'RN', 'RS', 'SC', 'SP', 'SE', 'TO'],
+      estadosSiglas: ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RR', 'RO', 'RJ', 'RN', 'RS', 'SC', 'SP', 'SE', 'TO'],
       editedItem: {
         nome: '',
         email: '',
@@ -141,12 +138,13 @@ export default {
     this.fetchHospedes();
   },
   methods: {
+    validarCPF,
     async fetchHospedes() {
       try {
         const response = await this.$axios.get('/hospede/');
         this.hospedes = response.data;
       } catch (error) {
-        this.errorMessage =error.response.data.message
+        this.errorMessage = error.response.data.message
         this.showAlert = true; // Ativa o alerta
         console.error(error);
       }
@@ -165,7 +163,7 @@ export default {
             this.hospedes.splice(index, 1);
           })
           .catch((error) => {
-            this.errorMessage =error.response.data.message
+            this.errorMessage = error.response.data.message
             this.showAlert = true; // Ativa o alerta
             console.error(error);
           });
@@ -186,7 +184,7 @@ export default {
             this.close();
           })
           .catch((error) => {
-            this.errorMessage =error.response.data.message
+            this.errorMessage = error.response.data.message
             this.showAlert = true; // Ativa o alerta
             console.error(error);
           });
@@ -198,7 +196,7 @@ export default {
             this.close();
           })
           .catch((error) => {
-            this.errorMessage =error.response.data.message
+            this.errorMessage = error.response.data.message
             this.showAlert = true; // Ativa o alerta
             console.error(error);
           });

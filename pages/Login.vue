@@ -17,8 +17,10 @@
               <v-text-field
                 v-model="password"
                 label="Senha"
-                type="password"
+                :type="showPassword ? 'text' : 'password'"
                 required
+                append-icon="mdi-eye"
+                @click:append="showPassword = !showPassword"
               ></v-text-field>
               <v-btn type="submit" color="primary" class="mx-2">Entrar</v-btn>
               <v-btn to="/Cadastro" color="primary" class="mx-2">Cadastre-se</v-btn>
@@ -34,6 +36,7 @@
 export default {
   data() {
     return {
+      showPassword: false,
       email: '',
       password: ''
     }

@@ -58,6 +58,7 @@
                   v-model="editedItem.email"
                   label="Email"
                   required
+                  :rules="[v => !!v || 'Email é obrigatório', v => /.+@.+\..+/.test(v) || 'Email deve ser válido']"
                 ></v-text-field>
               </v-col>
               <v-col cols="12">
@@ -66,6 +67,7 @@
                   label="Senha"
                   :type="showPassword ? 'text' : 'password'"
                   required
+                  :rules="[v => !!v || 'Senha é obrigatória', v => v.length >= 8 || 'Senha deve ter no mínimo 8 caracteres']"
                   append-icon="mdi-eye"
                   @click:append="showPassword = !showPassword"
                 ></v-text-field>
@@ -82,6 +84,11 @@
                   v-model="editedItem.cpf"
                   label="CPF"
                   required
+                  :rules="[
+                    v => !!v || 'CPF é obrigatório',
+                    v => /^\d{11}$/.test(v) || 'CPF deve conter 11 dígitos',
+                    v => validarCPF(v) || 'CPF inválido'
+                  ]"
                 ></v-text-field>
               </v-col>
               <v-col cols="12">
@@ -156,6 +163,7 @@
 </template>
 
 <script>
+import { validarCPF } from '../utils/validarCPF'
 export default {
   middleware: ['auth', 'autorizacao'],
   data() {
@@ -246,6 +254,7 @@ export default {
     this.fetchUsuarios();
   },
   methods: {
+    validarCPF,
     async fetchUsuarios() {
       try {
         const response = await this.$axios.get("/usuario");
