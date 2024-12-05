@@ -25,6 +25,7 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    { src: '~/plugins/global-navigation-guard.js', mode: 'client' }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -57,19 +58,25 @@ export default {
           type: 'Bearer'
         },
         user: {
-          property: 'user',
-          autoFetch: true
+          property: false,
+          autoFetch: false,
         },
         endpoints: {
           login: { url: '/login', method: 'post', propertyName: 'token_acesso' },
-          user: { url: '/usuario/me', method: 'get', propertyName: 'user' }
+          user: false
         }
       }
+    },
+    redirect: {
+      login: '/acessonegado',
+      logout: '/login',
+      home: '/',
+      callback: false // Desativa o callback padrão
     }
   },
 
   router: {
-    // middleware: ['auth']
+    middleware: ['auth']
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
