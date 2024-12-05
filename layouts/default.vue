@@ -4,13 +4,17 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title>Pousada Ypuã</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-text v-if="$auth.loggedIn">{{ userEmail }}</v-text>
-      <v-btn icon @click="goToLogin">
-        <v-icon>mdi-account</v-icon>
-      </v-btn>
-      <v-btn icon @click="logout">
-        <v-icon>mdi-logout</v-icon>
-      </v-btn>
+      <div v-if="$auth.loggedIn">
+        {{ userEmail }}
+        <v-btn icon @click="logout">
+          <v-icon>mdi-logout</v-icon>
+        </v-btn>
+      </div>
+      <div v-else>
+        <v-btn icon @click="goToLogin">
+          <v-icon>mdi-account</v-icon>
+        </v-btn>
+      </div>
     </v-app-bar>
 
     <v-navigation-drawer app v-model="drawer" temporary>
@@ -63,16 +67,16 @@ export default {
       try {
         if (this.$auth.loggedIn) {
           const token = this.$auth.$storage.getUniversal('_token.local');
-          
+
           // Remova o prefixo 'Bearer ' se estiver presente
           const cleanToken = token.replace(/^Bearer\s+/, '');
 
           if (cleanToken) {
             const decoded = jwtDecode(cleanToken);
-            
+
             // Extract role - adjust the key based on your JWT structure
             this.userRole = decoded.role;
-            
+
             // Extract email - adjust the key based on your JWT structure
             this.userEmail = decoded.email;
 
@@ -80,7 +84,7 @@ export default {
           }
         }
       } catch (error) {
-        console.error('Error extracting user info:', error);
+        console.error('Erro ao decodificar token:', error);
         this.userRole = 'public';
         this.userEmail = '';
       }
@@ -98,19 +102,19 @@ export default {
         console.error('Erro ao fazer logout:', error);
       }
     },
-    getIcon(path) { 
+    getIcon(path) {
       switch (path) {
         case '/': return 'mdi-home';
         case '/sobre': return 'mdi-information';
         case '/usuarios': return 'mdi-account-circle';
         case '/hospedes': return 'mdi-account-group';
-        case '/acomodacoescarrousel': return 'mdi-bed'; 
+        case '/acomodacoescarrousel': return 'mdi-bed';
         case '/reservas': return 'mdi-calendar-check';
         case '/checkin': return 'mdi-clock-in';
         case '/checkout': return 'mdi-clock-out';
         case '/relatorios': return 'mdi-file-chart';
         case '/contato': return 'mdi-phone';
-        default: return 'mdi-link'; 
+        default: return 'mdi-link';
       }
     },
     getTitle(path) {
@@ -119,13 +123,13 @@ export default {
         case '/sobre': return 'Sobre';
         case '/usuarios': return 'Usuários';
         case '/hospedes': return 'Hóspedes';
-        case '/acomodacoescarrousel': return 'Acomodações'; 
+        case '/acomodacoescarrousel': return 'Acomodações';
         case '/reservas': return 'Reservas';
         case '/checkin': return 'Check-in';
         case '/checkout': return 'Check-out';
         case '/relatorios': return 'Relatórios';
         case '/contato': return 'Contato';
-        default: return 'Página'; 
+        default: return 'Página';
       }
     }
   },
