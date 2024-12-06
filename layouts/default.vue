@@ -80,6 +80,7 @@ export default {
             // Extract email - adjust the key based on your JWT structure
             this.userEmail = decoded.email;
 
+            // Extract name - adjust the key based on your JWT structure
             this.userName = decoded.name;
           }
         }
