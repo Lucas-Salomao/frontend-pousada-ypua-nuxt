@@ -314,6 +314,7 @@ export default {
       showAlert: false, // Controla a visibilidade do alerta
       errorMessage: "", // Armazena a mensagem de erro
       dialog: false,
+      currentImage: 0,
       headers: [
         { text: "ID", value: "id" },
         { text: "Nome", value: "nome" },
@@ -402,7 +403,7 @@ export default {
             console.log(this.userEmail);
 
             // Extract name - adjust the key based on your JWT structure
-            this.userName = decoded.name;
+            this.userName = decoded.nome;
             console.log(this.userName);
 
           }
