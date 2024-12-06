@@ -66,8 +66,10 @@
                   v-model="editedItem.senha"
                   label="Senha"
                   :type="showPassword ? 'text' : 'password'"
-                  required
-                  :rules="[v => !!v || 'Senha é obrigatória', v => v.length >= 8 || 'Senha deve ter no mínimo 8 caracteres']"
+                  :required="editedIndex === -1"
+                  :rules="[
+                    v => !v || v.length >= 8 || 'Senha deve ter no mínimo 8 caracteres'
+                  ]"
                   append-icon="mdi-eye"
                   @click:append="showPassword = !showPassword"
                 ></v-text-field>
@@ -269,6 +271,7 @@ export default {
     editItem(item) {
       this.editedIndex = this.usuarios.indexOf(item);
       this.editedItem = Object.assign({}, item);
+      this.editedItem.senha = "";  // Clear the password field for editing
       this.dialog = true;
     },
     deleteItem(item) {
@@ -297,8 +300,12 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         // Atualizar usuário existente
+        const updatedData = { ...this.editedItem };
+        if (!updatedData.senha) {  // Don't send an empty password on update
+          delete updatedData.senha;
+        }
         this.$axios
-          .put(`/usuario/${this.editedItem.id}`, this.editedItem)
+          .put(`/usuario/${this.editedItem.id}`, this.updatedData)
           .then(() => {
             Object.assign(this.usuarios[this.editedIndex], this.editedItem);
             this.close();
