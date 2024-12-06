@@ -45,6 +45,9 @@
                   <v-btn color="info" @click.stop="openModal(acomodacao)">
                     Visualizar
                   </v-btn>
+                  <v-btn color="warning" @click.stop="reservarAcomodacao(acomodacao)" v-if="userRole === 'admin' || userRole === 'funcionario' || userRole === 'usuario'">
+                    Reservar
+                  </v-btn>
                 </v-card-actions>
               </v-card>
             </v-carousel-item>
@@ -296,16 +299,34 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-dialog v-model="reservaDialog" max-width="500px">
+      <!--  Modal de Reserva (semelhante ao cadastro de nova reserva) -->
+        <ReservaModal
+          :visible.sync="reservaDialog"
+          :acomodacao="selectedAcomodacao"
+          @reserva-criada="onReservaCriada"
+          :usuarioEmail="userEmail"
+          :usuarioNome="userName"
+          @close="reservaDialog = false"
+       />    
+    </v-dialog>
+
   </v-container>
 </template>
 
 <script>
 import jwtDecode from 'jwt-decode';
+import ReservaModal from './ReservaModal.vue'; // Importe o componente da modal
 
 export default {
   // middleware: 'auth',
+  components: {
+    ReservaModal,
+  },
   data() {
     return {
+      reservaDialog: false,
       userRole: null,
       userEmail: null,
       userName: null,
@@ -383,6 +404,18 @@ export default {
     this.fetchAcomodacoes();
   },
   methods: {
+    reservarAcomodacao(acomodacao) {
+      if (this.$auth.loggedIn) {
+        this.selectedAcomodacao = acomodacao;
+        this.reservaDialog = true; // Abre a modal de reserva
+      } else {
+        alert("Você precisa estar logado para reservar uma acomodação.");
+      }
+    },
+    onReservaCriada() {
+      this.reservaDialog = false;  // Fecha a modal após a criação da reserva
+    },
+
     extractUserInfo() {
       try {
         if (this.$auth.loggedIn) {
