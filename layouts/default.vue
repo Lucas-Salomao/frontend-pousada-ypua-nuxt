@@ -4,6 +4,12 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title>Pousada Ypuã</v-toolbar-title>
       <v-spacer></v-spacer>
+      <div >
+        {{ getSaudacao() }},
+      </div>
+      <div v-if="$auth.loggedIn" class='px-4'>
+        {{ userName }}
+      </div>
       <div v-if="$auth.loggedIn">
         {{ userEmail }}
         <v-btn icon @click="logout">
@@ -63,6 +69,18 @@ export default {
     this.extractUserInfo();
   },
   methods: {
+    getSaudacao() {
+      const hora = new Date().getHours();
+      
+      if (hora >= 6 && hora < 12) {
+        return 'Bom dia';
+      } else if (hora >= 12 && hora < 18) {
+        return 'Boa tarde';
+      } else {
+        return 'Boa noite';
+      }
+    },
+
     extractUserInfo() {
       try {
         if (this.$auth.loggedIn) {
@@ -81,7 +99,7 @@ export default {
             this.userEmail = decoded.email;
 
             // Extract name - adjust the key based on your JWT structure
-            this.userName = decoded.name;
+            this.userName = decoded.nome;
           }
         }
       } catch (error) {
