@@ -429,15 +429,12 @@ export default {
 
             // Extract role - adjust the key based on your JWT structure
             this.userRole = decoded.role;
-            console.log(this.userRole);
 
             // Extract email - adjust the key based on your JWT structure
             this.userEmail = decoded.email;
-            console.log(this.userEmail);
 
             // Extract name - adjust the key based on your JWT structure
             this.userName = decoded.nome;
-            console.log(this.userName);
 
           }
         }
