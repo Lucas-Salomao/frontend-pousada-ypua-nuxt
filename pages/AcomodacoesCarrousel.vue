@@ -1,16 +1,8 @@
 <template>
   <v-container>
     <v-row>
-      <v-alert
-        v-model="showAlert"
-        border="left"
-        close-text="Close Alert"
-        color="error"
-        dark
-        dismissible
-        shaped
-        width="100%"
-        >{{ errorMessage }}
+      <v-alert v-model="showAlert" border="left" close-text="Close Alert" color="error" dark dismissible shaped
+        width="100%">{{ errorMessage }}
       </v-alert>
     </v-row>
     <v-row>
@@ -19,29 +11,20 @@
           <v-card-title>
             Acomodações
             <v-spacer />
-            <v-btn color="primary" @click="dialog = true">
+            <v-btn color="primary" @click="dialog = true" v-if="userRole == 'admin' || userRole == 'funcionario'">
               Nova Acomodação
             </v-btn>
           </v-card-title>
 
           <v-carousel v-model="currentAcomodacao" cycle height="750">
-            <v-carousel-item
-              v-for="(acomodacao, index) in acomodacoes"
-              :key="index"
-              @click="openModal(acomodacao)"
-            >
+            <v-carousel-item v-for="(acomodacao, index) in acomodacoes" :key="index">
               <v-card class="fill-height">
-                <v-img
-                  :src="
-                    acomodacao.fotos && acomodacao.fotos.length > 0
-                      ? `data:${acomodacao.fotos[0].tipo};base64,${encodeBase64(
-                          acomodacao.fotos[0].imagem.data
-                        )}`
-                      : 'https://fakeimg.pl/600x400'
-                  "
-                  height="400"
-                  cover
-                ></v-img>
+                <v-img :src="acomodacao.fotos && acomodacao.fotos.length > 0
+                    ? `data:${acomodacao.fotos[0].tipo};base64,${encodeBase64(
+                      acomodacao.fotos[0].imagem.data
+                    )}`
+                    : 'https://fakeimg.pl/600x400'
+                  " height="400" cover></v-img>
                 <v-card-title class="text-h5">
                   {{ acomodacao.nome }}
                 </v-card-title>
@@ -53,11 +36,14 @@
                 </v-card-text>
 
                 <v-card-actions>
-                  <v-btn color="primary" @click="editItem(acomodacao)">
+                  <v-btn color="primary" @click.stop="editItem(acomodacao)" v-if="userRole === 'admin' || userRole === 'funcionario'">
                     Editar
                   </v-btn>
-                  <v-btn color="error" @click="deleteItem(acomodacao)">
+                  <v-btn color="error" @click.stop="deleteItem(acomodacao)" v-if="userRole === 'admin' || userRole === 'funcionario'">
                     Excluir
+                  </v-btn>
+                  <v-btn color="info" @click.stop="openModal(acomodacao)">
+                    Visualizar
                   </v-btn>
                 </v-card-actions>
               </v-card>
@@ -79,17 +65,10 @@
             <v-col cols="12" md="6">
               <!-- Carrossel de imagens -->
               <v-carousel v-model="currentImage" cycle height="300">
-                <v-carousel-item
-                  v-for="(foto, fotoIndex) in selectedAcomodacao.fotos"
-                  :key="fotoIndex"
-                >
-                  <v-img
-                    :src="`data:${foto.tipo};base64,${encodeBase64(
-                      foto.imagem.data
-                    )}`"
-                    height="300"
-                    cover
-                  ></v-img>
+                <v-carousel-item v-for="(foto, fotoIndex) in selectedAcomodacao.fotos" :key="fotoIndex">
+                  <v-img :src="`data:${foto.tipo};base64,${encodeBase64(
+                    foto.imagem.data
+                  )}`" height="300" cover></v-img>
                 </v-carousel-item>
               </v-carousel>
             </v-col>
@@ -167,20 +146,11 @@
           <v-container>
             <v-row>
               <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model="editedItem.nome"
-                  label="Nome"
-                  required
-                ></v-text-field>
+                <v-text-field v-model="editedItem.nome" label="Nome" required></v-text-field>
               </v-col>
 
               <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model="editedItem.numero"
-                  label="Número"
-                  type="number"
-                  required
-                ></v-text-field>
+                <v-text-field v-model="editedItem.numero" label="Número" type="number" required></v-text-field>
               </v-col>
 
               <!-- <v-col cols="12" sm="6">
@@ -192,60 +162,34 @@
                 </v-col> -->
 
               <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model="editedItem.capacidade"
-                  label="Capacidade"
-                  type="number"
-                  required
-                ></v-text-field>
+                <v-text-field v-model="editedItem.capacidade" label="Capacidade" type="number" required></v-text-field>
               </v-col>
 
               <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model="editedItem.quantidadeCamas"
-                  label="Quantidade de Camas"
-                  type="number"
-                  required
-                ></v-text-field>
+                <v-text-field v-model="editedItem.quantidadeCamas" label="Quantidade de Camas" type="number"
+                  required></v-text-field>
               </v-col>
 
               <v-col cols="12" sm="6">
-                <v-select
-                  v-model="editedItem.tipoCama"
-                  :items="tipoCamaOptions"
-                  label="Tipo de Cama"
-                  required
-                ></v-select>
+                <v-select v-model="editedItem.tipoCama" :items="tipoCamaOptions" label="Tipo de Cama"
+                  required></v-select>
               </v-col>
 
               <v-col cols="12" sm="6">
-                <v-select
-                  v-model="editedItem.tipoBanheiro"
-                  :items="tipoBanheiroOptions"
-                  label="Tipo de Banheiro"
-                  required
-                ></v-select>
+                <v-select v-model="editedItem.tipoBanheiro" :items="tipoBanheiroOptions" label="Tipo de Banheiro"
+                  required></v-select>
               </v-col>
 
               <v-col cols="12" sm="6">
-                <v-checkbox
-                  v-model="editedItem.comAcessibilidade"
-                  label="Acessibilidade"
-                ></v-checkbox>
+                <v-checkbox v-model="editedItem.comAcessibilidade" label="Acessibilidade"></v-checkbox>
               </v-col>
 
               <v-col cols="12" sm="6">
-                <v-checkbox
-                  v-model="editedItem.comChuveiro"
-                  label="Chuveiro"
-                ></v-checkbox>
+                <v-checkbox v-model="editedItem.comChuveiro" label="Chuveiro"></v-checkbox>
               </v-col>
 
               <v-col cols="12" sm="6">
-                <v-checkbox
-                  v-model="editedItem.comBanheira"
-                  label="Banheira"
-                ></v-checkbox>
+                <v-checkbox v-model="editedItem.comBanheira" label="Banheira"></v-checkbox>
               </v-col>
 
               <!-- <v-col cols="12" sm="6">
@@ -254,56 +198,35 @@
                 </v-col> -->
 
               <v-col cols="12" sm="6">
-                <v-checkbox
-                  v-model="editedItem.comToalhas"
-                  label="Toalhas"
-                ></v-checkbox>
+                <v-checkbox v-model="editedItem.comToalhas" label="Toalhas"></v-checkbox>
               </v-col>
 
               <v-col cols="12" sm="6">
-                <v-checkbox
-                  v-model="editedItem.comSecador"
-                  label="Secador"
-                ></v-checkbox>
+                <v-checkbox v-model="editedItem.comSecador" label="Secador"></v-checkbox>
               </v-col>
 
               <v-col cols="12" sm="6">
-                <v-checkbox
-                  v-model="editedItem.comCozinha"
-                  label="Cozinha"
-                ></v-checkbox>
+                <v-checkbox v-model="editedItem.comCozinha" label="Cozinha"></v-checkbox>
               </v-col>
 
               <v-col cols="12" sm="6">
-                <v-checkbox
-                  v-model="editedItem.comRestaurante"
-                  label="Restaurante"
-                ></v-checkbox>
+                <v-checkbox v-model="editedItem.comRestaurante" label="Restaurante"></v-checkbox>
               </v-col>
 
               <v-col cols="12" sm="6">
-                <v-checkbox
-                  v-model="editedItem.comArCondicionado"
-                  label="Ar Condicionado"
-                ></v-checkbox>
+                <v-checkbox v-model="editedItem.comArCondicionado" label="Ar Condicionado"></v-checkbox>
               </v-col>
 
               <v-col cols="12" sm="6">
-                <v-checkbox
-                  v-model="editedItem.comAquecedor"
-                  label="Aquecedor"
-                ></v-checkbox>
+                <v-checkbox v-model="editedItem.comAquecedor" label="Aquecedor"></v-checkbox>
               </v-col>
               <v-col cols="12" sm="6">
                 <v-checkbox v-model="editedItem.comTV" label="TV"> </v-checkbox>
               </v-col>
 
               <v-col cols="12" sm="6" v-if="editedItem.comTV">
-                <v-text-field
-                  v-model="editedItem.tamanhoTV"
-                  label="Tamanho da TV (polegadas)"
-                  type="number"
-                ></v-text-field>
+                <v-text-field v-model="editedItem.tamanhoTV" label="Tamanho da TV (polegadas)"
+                  type="number"></v-text-field>
               </v-col>
 
               <!-- <v-col cols="12" sm="6" v-if="editedItem.comTV">
@@ -314,10 +237,7 @@
                 </v-col> -->
 
               <v-col cols="12" sm="6">
-                <v-checkbox
-                  v-model="editedItem.comWifi"
-                  label="Wi-Fi"
-                ></v-checkbox>
+                <v-checkbox v-model="editedItem.comWifi" label="Wi-Fi"></v-checkbox>
               </v-col>
 
               <!-- <v-col cols="12" sm="6" v-if="editedItem.comWifi">
@@ -335,17 +255,11 @@
                 </v-col> -->
 
               <v-col cols="12" sm="6">
-                <v-checkbox
-                  v-model="editedItem.comFrigobar"
-                  label="Frigobar"
-                ></v-checkbox>
+                <v-checkbox v-model="editedItem.comFrigobar" label="Frigobar"></v-checkbox>
               </v-col>
 
               <v-col cols="12" sm="6">
-                <v-checkbox
-                  v-model="editedItem.comCofre"
-                  label="Cofre"
-                ></v-checkbox>
+                <v-checkbox v-model="editedItem.comCofre" label="Cofre"></v-checkbox>
               </v-col>
 
               <!-- <v-col cols="12" sm="6">
@@ -356,38 +270,21 @@
                 </v-col> -->
 
               <v-col cols="12" sm="6">
-                <v-checkbox
-                  v-model="editedItem.comVaranda"
-                  label="Varanda"
-                ></v-checkbox>
+                <v-checkbox v-model="editedItem.comVaranda" label="Varanda"></v-checkbox>
               </v-col>
 
               <v-col cols="12">
-                <v-text-field
-                  v-model="editedItem.descricao"
-                  label="Descrição"
-                  required
-                ></v-text-field>
+                <v-text-field v-model="editedItem.descricao" label="Descrição" required></v-text-field>
               </v-col>
 
               <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model="editedItem.preco"
-                  label="Preço"
-                  prefix="R$"
-                  type="number"
-                  required
-                ></v-text-field>
+                <v-text-field v-model="editedItem.preco" label="Preço" prefix="R$" type="number"
+                  required></v-text-field>
               </v-col>
 
               <!-- Campo para Upload de Fotos -->
               <v-col cols="12">
-                <v-file-input
-                  v-model="fotos"
-                  accept="image/*"
-                  label="Fotos"
-                  multiple
-                ></v-file-input>
+                <v-file-input v-model="fotos" accept="image/*" label="Fotos" multiple></v-file-input>
               </v-col>
             </v-row>
           </v-container>
@@ -403,10 +300,15 @@
 </template>
 
 <script>
+import jwtDecode from 'jwt-decode';
+
 export default {
   // middleware: 'auth',
   data() {
     return {
+      userRole: null,
+      userEmail: null,
+      userName: null,
       modalAcomodacao: false, // Controla a visibilidade do modal
       selectedAcomodacao: {}, // Armazena a acomodação selecionada
       showAlert: false, // Controla a visibilidade do alerta
@@ -476,9 +378,42 @@ export default {
     },
   },
   mounted() {
+    this.extractUserInfo();
     this.fetchAcomodacoes();
   },
   methods: {
+    extractUserInfo() {
+      try {
+        if (this.$auth.loggedIn) {
+          const token = this.$auth.$storage.getUniversal('_token.local');
+
+          // Remova o prefixo 'Bearer ' se estiver presente
+          const cleanToken = token.replace(/^Bearer\s+/, '');
+
+          if (cleanToken) {
+            const decoded = jwtDecode(cleanToken);
+
+            // Extract role - adjust the key based on your JWT structure
+            this.userRole = decoded.role;
+            console.log(this.userRole);
+
+            // Extract email - adjust the key based on your JWT structure
+            this.userEmail = decoded.email;
+            console.log(this.userEmail);
+
+            // Extract name - adjust the key based on your JWT structure
+            this.userName = decoded.name;
+            console.log(this.userName);
+
+          }
+        }
+      } catch (error) {
+        console.error('Erro ao decodificar token:', error);
+        this.userRole = 'public';
+        this.userEmail = '';
+      }
+    },
+
     encodeBase64(buffer) {
       return btoa(String.fromCharCode(...buffer));
     },
@@ -487,7 +422,7 @@ export default {
         const response = await this.$axios.get(`/acomodacao/`);
         this.acomodacoes = response.data;
       } catch (error) {
-        this.errorMessage =error.response.data.message
+        this.errorMessage = error.response.data.message
         this.showAlert = true; // Ativa o alerta
         console.error(error);
       }
@@ -506,7 +441,7 @@ export default {
             this.acomodacoes.splice(index, 1);
           })
           .catch((error) => {
-            this.errorMessage =error.response.data.message
+            this.errorMessage = error.response.data.message
             this.showAlert = true; // Ativa o alerta
             console.error(error);
           });
@@ -520,47 +455,63 @@ export default {
       });
     },
     async save() {
-      // Cria um objeto FormData para enviar os dados
-      const formData = new FormData();
-
-      // Adiciona os dados da acomodação ao FormData
-      for (const key in this.editedItem) {
-        formData.append(key, this.editedItem[key]);
-      }
-
-      // Adiciona as fotos ao FormData
-      for (let i = 0; i < this.fotos.length; i++) {
-        formData.append("fotos", this.fotos[i]);
-      }
-
       try {
         if (this.editedIndex > -1) {
-          // Editar acomodação (incluindo fotos)
+          // Editar acomodação existente
+          const dadosAtualizacao = {
+            nome: this.editedItem.nome,
+            numero: this.editedItem.numero,
+            capacidade: this.editedItem.capacidade,
+            quantidadeCamas: this.editedItem.quantidadeCamas,
+            tipoCama: this.editedItem.tipoCama,
+            tipoBanheiro: this.editedItem.tipoBanheiro,
+            comChuveiro: this.editedItem.comChuveiro,
+            comBanheira: this.editedItem.comBanheira,
+            comToalhas: this.editedItem.comToalhas,
+            comSecador: this.editedItem.comSecador,
+            comAcessibilidade: this.editedItem.comAcessibilidade,
+            comCozinha: this.editedItem.comCozinha,
+            comRestaurante: this.editedItem.comRestaurante,
+            comArCondicionado: this.editedItem.comArCondicionado,
+            comAquecedor: this.editedItem.comAquecedor,
+            comTV: this.editedItem.comTV,
+            tamanhoTV: this.editedItem.tamanhoTV,
+            comWifi: this.editedItem.comWifi,
+            comFrigobar: this.editedItem.comFrigobar,
+            comCofre: this.editedItem.comCofre,
+            comVaranda: this.editedItem.comVaranda,
+            descricao: this.editedItem.descricao,
+            preco: this.editedItem.preco
+          };
+
           const response = await this.$axios.put(
             `/acomodacao/${this.editedItem.id}`,
-            formData,
-            {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-            }
+            dadosAtualizacao
           );
+
           // Atualiza a acomodação na lista
           Object.assign(this.acomodacoes[this.editedIndex], response.data);
         } else {
-          // Criar nova acomodação (incluindo fotos)
-          const response = await this.$axios.post(`/acomodacao/`, formData, {
+          // Código existente para criar nova acomodação
+          const formData = new FormData();
+          for (const key in this.editedItem) {
+            formData.append(key, this.editedItem[key]);
+          }
+          for (let i = 0; i < this.fotos.length; i++) {
+            formData.append("fotos", this.fotos[i]);
+          }
+          const response = await this.$axios.post('/acomodacao/', formData, {
             headers: {
               "Content-Type": "multipart/form-data",
-            },
+            }
           });
-          // Adiciona a nova acomodação à lista
           this.acomodacoes.push(response.data);
         }
         this.close();
+        await this.fetchAcomodacoes();
       } catch (error) {
-        this.errorMessage =error.response.data.message
-        this.showAlert = true; // Ativa o alerta
+        this.errorMessage = error.response?.data?.message || 'Erro ao salvar acomodação';
+        this.showAlert = true;
         console.error(error);
       }
     },
