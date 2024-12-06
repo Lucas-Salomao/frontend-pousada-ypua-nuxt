@@ -7,12 +7,10 @@ export default function (context) {
   const { $auth, route, redirect } = context;
   // Verifica se o usuário está logado
   if ($auth.loggedIn) {
-    console.info("Usuário logado");
     
     // // Recupera o token
     const token = $auth.$storage.getUniversal('_token.local');
     const cleanToken = token.replace(/^Bearer\s+/, '');
-    console.log(cleanToken);
     
     // Decodifica o token para obter as informações do usuário
     if (cleanToken) {
