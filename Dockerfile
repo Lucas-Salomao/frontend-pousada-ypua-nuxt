@@ -1,29 +1,26 @@
-ARG NODE_VERSION=20.18.0
-
-FROM node:${NODE_VERSION}-slim as base
+FROM node:18-alpine AS builder
 
 ARG PORT=3000
 
 WORKDIR /src
 
 # Build
-FROM base as build
-
-COPY --link package.json package-lock.json .
+FROM builder as build
+COPY package.json package-lock.json ./
 RUN npm install
-
-COPY --link . .
-
+COPY . .
 RUN npm run build
 
 # Run
-FROM base
+FROM builder
 
 ENV PORT=$PORT
 ENV NODE_ENV=production
+WORKDIR /src
 
-COPY --from=build /src/.output /src/.output
-# Optional, only needed if you rely on unbundled dependencies
-# COPY --from=build /src/node_modules /src/node_modules
+COPY --from=build /src/.nuxt /src/.nuxt
+COPY --from=build /src/static /src/static
+COPY --from=build /src/nuxt.config.js /src/nuxt.config.js
+COPY --from=build /src/package.json /src/package.json
 
-CMD [ "node", ".output/server/index.mjs" ]
+CMD [ "npx", "nuxt", "start" ]
