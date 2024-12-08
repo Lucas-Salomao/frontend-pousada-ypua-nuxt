@@ -44,7 +44,7 @@ export default {
   ],
 
   axios: {
-    baseURL: process.env.API_ENDPOINT
+    baseURL: process.env.VUE_APP_API_ENDPOINT
   },
 
   auth: {
@@ -114,4 +114,7 @@ export default {
     port: 3000,
     host: '0.0.0.0'
   },
+  env: {
+    apiEndpoint: process.env.API_ENDPOINT
+  }
 }
