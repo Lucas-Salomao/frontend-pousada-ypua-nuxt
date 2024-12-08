@@ -1,26 +1,19 @@
-FROM node:18-alpine AS builder
+FROM node:18-alpine
 
-ARG PORT=3000
+# Defina o diretório de trabalho no container
+WORKDIR /app
 
-WORKDIR /src
+# Copie os arquivos de definição de dependências
+COPY package*.json ./
 
-# Build
-FROM builder as build
-COPY package.json package-lock.json ./
+# Instale as dependências do projeto
 RUN npm install
+
+# Copie o resto dos arquivos do projeto
 COPY . .
-RUN npm run build
 
-# Run
-FROM builder
+# Exponha a porta padrão do Nuxt.js (geralmente 3000)
+EXPOSE 3000
 
-ENV PORT=$PORT
-ENV NODE_ENV=production
-WORKDIR /src
-
-COPY --from=build /src/.nuxt /src/.nuxt
-COPY --from=build /src/static /src/static
-COPY --from=build /src/nuxt.config.js /src/nuxt.config.js
-COPY --from=build /src/package.json /src/package.json
-
-CMD [ "npx", "nuxt", "start" ]
+# Comando para iniciar a aplicação em modo de desenvolvimento
+CMD ["npm", "run", "dev"]
