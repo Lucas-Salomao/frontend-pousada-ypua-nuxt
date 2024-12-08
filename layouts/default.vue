@@ -21,6 +21,9 @@
           <v-icon>mdi-account</v-icon>
         </v-btn>
       </div>
+      <v-btn icon @click="toggleTheme">
+        <v-icon>{{ isDark ? 'mdi-weather-sunny' : 'mdi-weather-night' }}</v-icon>
+      </v-btn>
     </v-app-bar>
 
     <v-navigation-drawer app v-model="drawer" temporary>
@@ -55,6 +58,7 @@ export default {
     userRole: null,
     userEmail: null,
     userName: null,
+    isDark: true, // Adiciona o controle do tema
   }),
   computed: {
     filteredRoutes() {
@@ -65,10 +69,32 @@ export default {
       }
     }
   },
+  mounted() {
+    // Move a lógica do tema para o hook mounted, que só executa no cliente
+    this.initializeTheme();
+  },
   created() {
     this.extractUserInfo();
   },
   methods: {
+    initializeTheme() {
+      // Verifica se está no ambiente do navegador
+      if (process.client) {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+          this.isDark = savedTheme === 'dark';
+          this.$vuetify.theme.dark = this.isDark;
+        }
+      }
+    },
+    toggleTheme() {
+      this.isDark = !this.isDark;
+      this.$vuetify.theme.dark = this.isDark;
+      // Salva apenas se estiver no cliente
+      if (process.client) {
+        localStorage.setItem('theme', this.isDark ? 'dark' : 'light');
+      }
+    },
     getSaudacao() {
       const hora = new Date().getHours();
       
@@ -129,8 +155,8 @@ export default {
         case '/hospedes': return 'mdi-account-group';
         case '/acomodacoescarrousel': return 'mdi-bed';
         case '/reservas': return 'mdi-calendar-check';
-        case '/checkin': return 'mdi-clock-in';
-        case '/checkout': return 'mdi-clock-out';
+        // case '/checkin': return 'mdi-clock-in';
+        // case '/checkout': return 'mdi-clock-out';
         case '/relatorios': return 'mdi-file-chart';
         case '/contato': return 'mdi-phone';
         default: return 'mdi-link';
@@ -144,8 +170,8 @@ export default {
         case '/hospedes': return 'Hóspedes';
         case '/acomodacoescarrousel': return 'Acomodações';
         case '/reservas': return 'Reservas';
-        case '/checkin': return 'Check-in';
-        case '/checkout': return 'Check-out';
+        // case '/checkin': return 'Check-in';
+        // case '/checkout': return 'Check-out';
         case '/relatorios': return 'Relatórios';
         case '/contato': return 'Contato';
         default: return 'Página';

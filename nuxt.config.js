@@ -84,24 +84,24 @@ export default {
     theme: {
       dark: true,
       themes: {
+        light: {
+          primary: '#8B3232',     // Marrom avermelhado/bordô do logo e botões
+          secondary: '#D4B996',   // Tom marrom claro (como na roupa de cama)
+          accent: '#4A6741',      // Verde (como na parede)
+          info: '#2196F3',        // Mantendo azul padrão para informações
+          warning: '#FFC107',     // Amarelo padrão para avisos
+          error: '#FF5252',       // Vermelho padrão para erros
+          success: '#4CAF50',     // Verde padrão para sucesso
+        },
         dark: {
-          primary: colors.red.darken4,
-          accent: colors.grey.darken3,
-          secondary: colors.red.lighten4,
-          info: colors.teal.lighten1,
-          warning: colors.amber.base,
-          error: colors.deepOrange.accent4,
-          success: colors.green.accent3
-        },
-        light: { // Tema light
-          primary: colors.red.lighten3, // Tom mais claro de vermelho
-          accent: colors.grey.lighten4, // Tom mais claro de cinza
-          secondary: colors.red.darken2, // Tom mais escuro de vermelho para contraste
-          info: colors.blue.lighten2,  // Tom mais claro de azul
-          warning: colors.yellow.lighten2, // Tom mais claro de amarelo
-          error: colors.red.accent2,  // Tom de vermelho para erro
-          success: colors.green.lighten3, // Tom mais claro de verde
-        },
+          primary: '#A64452',     // Versão mais clara do bordô para modo escuro
+          secondary: '#E5D3B3',   // Versão mais clara do marrom
+          accent: '#5B824F',      // Versão mais clara do verde
+          info: '#64B5F6',        // Azul mais claro para modo escuro
+          warning: '#FFD54F',     // Amarelo mais claro para modo escuro
+          error: '#FF5252',       // Mantendo vermelho para erros
+          success: '#81C784',     // Verde mais claro para sucesso
+        }
       }
     }
   },

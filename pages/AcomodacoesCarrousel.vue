@@ -19,12 +19,28 @@
           <v-carousel v-model="currentAcomodacao" cycle height="750">
             <v-carousel-item v-for="(acomodacao, index) in acomodacoes" :key="index">
               <v-card class="fill-height">
-                <v-img :src="acomodacao.fotos && acomodacao.fotos.length > 0
-                    ? `data:${acomodacao.fotos[0].tipo};base64,${encodeBase64(
-                      acomodacao.fotos[0].imagem.data
-                    )}`
-                    : 'https://fakeimg.pl/600x400'
-                  " height="400" cover></v-img>
+                <!-- Carousel aninhado para as fotos da acomodação -->
+                <v-carousel height="400" cycle hide-delimiter-background show-arrows-on-hover>
+                  <v-carousel-item
+                    v-for="(foto, fotoIndex) in acomodacao.fotos"
+                    :key="fotoIndex"
+                  >
+                    <v-img
+                      :src="`data:${foto.tipo};base64,${encodeBase64(foto.imagem.data)}`"
+                      height="400"
+                      cover
+                    ></v-img>
+                  </v-carousel-item>
+                  <!-- Fallback quando não há fotos -->
+                  <v-carousel-item v-if="!acomodacao.fotos || acomodacao.fotos.length === 0">
+                    <v-img
+                      src="https://fakeimg.pl/600x400"
+                      height="400"
+                      cover
+                    ></v-img>
+                  </v-carousel-item>
+                </v-carousel>
+
                 <v-card-title class="text-h5">
                   {{ acomodacao.nome }}
                 </v-card-title>
@@ -36,16 +52,19 @@
                 </v-card-text>
 
                 <v-card-actions>
-                  <v-btn color="primary" @click.stop="editItem(acomodacao)" v-if="userRole === 'admin' || userRole === 'funcionario'">
+                  <v-btn color="primary" @click.stop="editItem(acomodacao)"
+                    v-if="userRole === 'admin' || userRole === 'funcionario'">
                     Editar
                   </v-btn>
-                  <v-btn color="error" @click.stop="deleteItem(acomodacao)" v-if="userRole === 'admin' || userRole === 'funcionario'">
+                  <v-btn color="error" @click.stop="deleteItem(acomodacao)"
+                    v-if="userRole === 'admin' || userRole === 'funcionario'">
                     Excluir
                   </v-btn>
                   <v-btn color="info" @click.stop="openModal(acomodacao)">
                     Visualizar
                   </v-btn>
-                  <v-btn color="warning" @click.stop="reservarAcomodacao(acomodacao)" v-if="userRole === 'admin' || userRole === 'funcionario' || userRole === 'usuario'">
+                  <v-btn color="warning" @click.stop="reservarAcomodacao(acomodacao)"
+                    v-if="userRole === 'admin' || userRole === 'funcionario' || userRole === 'usuario'">
                     Reservar
                   </v-btn>
                 </v-card-actions>
@@ -300,16 +319,10 @@
       </v-card>
     </v-dialog>
 
+    <!-- Modal de Reserva -->
     <v-dialog v-model="reservaDialog" max-width="500px">
-      <!--  Modal de Reserva (semelhante ao cadastro de nova reserva) -->
-        <ReservaModal
-          :visible.sync="reservaDialog"
-          :acomodacao="selectedAcomodacao"
-          @reserva-criada="onReservaCriada"
-          :usuarioEmail="userEmail"
-          :usuarioNome="userName"
-          @close="reservaDialog = false"
-       />    
+      <ReservaModal :visible.sync="reservaDialog" :acomodacao="selectedAcomodacao" :usuarioId="userId"
+        @reserva-criada="onReservaCriada" @pix-gerado="onPixGerado" @close="reservaDialog = false" />
     </v-dialog>
 
   </v-container>
@@ -330,6 +343,17 @@ export default {
       userRole: null,
       userEmail: null,
       userName: null,
+      userId: null,
+      hospedes: [],
+      reserva: {
+        usuarioId: null,
+        acomodacaoId: null, // ou this.acomodacao?.id se acomodacao estiver disponível aqui
+        hospedeIds: [],
+        dataEntrada: null,
+        dataSaida: null,
+        valorTotal:null,
+        status: 'EM PROCESSAMENTO',
+      },
       modalAcomodacao: false, // Controla a visibilidade do modal
       selectedAcomodacao: {}, // Armazena a acomodação selecionada
       showAlert: false, // Controla a visibilidade do alerta
@@ -404,16 +428,23 @@ export default {
     this.fetchAcomodacoes();
   },
   methods: {
-    reservarAcomodacao(acomodacao) {
-      if (this.$auth.loggedIn) {
-        this.selectedAcomodacao = acomodacao;
-        this.reservaDialog = true; // Abre a modal de reserva
-      } else {
-        alert("Você precisa estar logado para reservar uma acomodação.");
-      }
+    onPixGerado(pixTransaction) {
+        console.log("Pix gerado:", pixTransaction);
+        // Mantenha o modal aberto. Você pode adicionar lógica aqui, se necessário,
+        // para exibir uma mensagem de sucesso ou realizar outras ações.
     },
+
+    reservarAcomodacao(acomodacao) {
+      if (!this.$auth.loggedIn) {
+        alert("Você precisa estar logado para reservar uma acomodação.");
+        return;
+      }
+      this.selectedAcomodacao = acomodacao;
+      this.reservaDialog = true; // Abre a modal de reserva
+    },
+
     onReservaCriada() {
-      this.reservaDialog = false;  // Fecha a modal após a criação da reserva
+      this.reservaDialog = true;  // Fecha a modal após a criação da reserva
     },
 
     extractUserInfo() {
@@ -435,6 +466,8 @@ export default {
 
             // Extract name - adjust the key based on your JWT structure
             this.userName = decoded.nome;
+
+            this.userId = decoded.userId;
 
           }
         }
