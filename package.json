@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "nuxt",
-    "build": "nuxt build",
+    "buildwin": "set NODE_OPTIONS=--openssl-legacy-provider && nuxt build",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
     "start-prod": "node .output/server/index.mjs"
