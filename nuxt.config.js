@@ -111,10 +111,10 @@ export default {
   },
 
   server: {
-    port: 3000,
+    port: process.env.VUE_APP_PORT,
     host: '0.0.0.0'
   },
   env: {
-    apiEndpoint: process.env.API_ENDPOINT
+    apiEndpoint: process.env.VUE_APP_API_ENDPOINT
   }
 }
