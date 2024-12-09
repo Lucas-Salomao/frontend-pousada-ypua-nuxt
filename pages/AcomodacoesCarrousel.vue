@@ -38,7 +38,7 @@
                 <v-card-text>
                   <p>Descrição: {{ acomodacao.descricao }}</p>
                   <p>Capacidade: {{ acomodacao.capacidade }}</p>
-                  <p>Preço: R$ {{ acomodacao.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</p>
+                  <p>Preço: R$ {{ acomodacao.preco }}</p> 
                 </v-card-text>
 
                 <v-card-actions>
@@ -87,7 +87,7 @@
             <v-col cols="12" md="6">
               <p>Descrição: {{ selectedAcomodacao.descricao }}</p>
               <p>Capacidade: {{ selectedAcomodacao.capacidade }}</p>
-              <p>Preço: R$ {{ selectedAcomodacao.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</p>
+              <p>Preço: R$ {{ selectedAcomodacao.preco }}</p>
 
               <!-- Informações adicionais com ícones -->
               <div v-if="selectedAcomodacao.comAcessibilidade">
@@ -291,7 +291,7 @@
 
               <v-col cols="12" sm="6">
                 <v-text-field v-model="editedItem.preco" label="Preço" prefix="R$" type="number"
-                  :rules="[v => !!v || 'Preço é obrigatório']" step="0.01" min="0" required></v-text-field>
+                  required></v-text-field>
               </v-col>
 
               <!-- Campo para Upload de Fotos -->
@@ -399,10 +399,32 @@ export default {
         // comTelefone: false,
         comVaranda: false,
         descricao: "",
-        preco: 0.0,
+        preco: 0,
       },
       defaultItem: {
-        // ... valores padrão para os campos
+        nome: "",
+        numero: 0,
+        capacidade: 0,
+        quantidadeCamas: 0,
+        tipoCama: "",
+        tipoBanheiro: "",
+        comChuveiro: false,
+        comBanheira: false,
+        comToalhas: false,
+        comSecador: false,
+        comAcessibilidade: false,
+        comCozinha: false,
+        comRestaurante: false,
+        comArCondicionado: false,
+        comAquecedor: false,
+        comTV: false,
+        tamanhoTV: 0,
+        comWifi: false,
+        comFrigobar: false,
+        comCofre: false,
+        comVaranda: false,
+        descricao: "",
+        preco: 0,
       },
       fotos: [], // Array para armazenar as fotos selecionadas
       currentAcomodacao: 0, // Índice da acomodação no carrossel
