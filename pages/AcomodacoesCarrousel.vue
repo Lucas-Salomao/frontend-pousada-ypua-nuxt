@@ -21,23 +21,13 @@
               <v-card class="fill-height">
                 <!-- Carousel aninhado para as fotos da acomodação -->
                 <v-carousel height="400" cycle hide-delimiter-background show-arrows-on-hover>
-                  <v-carousel-item
-                    v-for="(foto, fotoIndex) in acomodacao.fotos"
-                    :key="fotoIndex"
-                  >
-                    <v-img
-                      :src="`data:${foto.tipo};base64,${encodeBase64(foto.imagem.data)}`"
-                      height="400"
-                      cover
-                    ></v-img>
+                  <v-carousel-item v-for="(foto, fotoIndex) in acomodacao.fotos" :key="fotoIndex">
+                    <v-img :src="`data:${foto.tipo};base64,${encodeBase64(foto.imagem.data)}`" height="400"
+                      cover></v-img>
                   </v-carousel-item>
                   <!-- Fallback quando não há fotos -->
                   <v-carousel-item v-if="!acomodacao.fotos || acomodacao.fotos.length === 0">
-                    <v-img
-                      src="https://fakeimg.pl/600x400"
-                      height="400"
-                      cover
-                    ></v-img>
+                    <v-img src="https://fakeimg.pl/600x400" height="400" cover></v-img>
                   </v-carousel-item>
                 </v-carousel>
 
@@ -48,7 +38,7 @@
                 <v-card-text>
                   <p>Descrição: {{ acomodacao.descricao }}</p>
                   <p>Capacidade: {{ acomodacao.capacidade }}</p>
-                  <p>Preço: R$ {{ acomodacao.preco }}</p>
+                  <p>Preço: R$ {{ acomodacao.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</p>
                 </v-card-text>
 
                 <v-card-actions>
@@ -97,7 +87,7 @@
             <v-col cols="12" md="6">
               <p>Descrição: {{ selectedAcomodacao.descricao }}</p>
               <p>Capacidade: {{ selectedAcomodacao.capacidade }}</p>
-              <p>Preço: R$ {{ selectedAcomodacao.preco }}</p>
+              <p>Preço: R$ {{ selectedAcomodacao.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</p>
 
               <!-- Informações adicionais com ícones -->
               <div v-if="selectedAcomodacao.comAcessibilidade">
@@ -301,7 +291,7 @@
 
               <v-col cols="12" sm="6">
                 <v-text-field v-model="editedItem.preco" label="Preço" prefix="R$" type="number"
-                  required></v-text-field>
+                  :rules="[v => !!v || 'Preço é obrigatório']" step="0.01" min="0" required></v-text-field>
               </v-col>
 
               <!-- Campo para Upload de Fotos -->
@@ -351,7 +341,7 @@ export default {
         hospedeIds: [],
         dataEntrada: null,
         dataSaida: null,
-        valorTotal:null,
+        valorTotal: null,
         status: 'EM PROCESSAMENTO',
       },
       modalAcomodacao: false, // Controla a visibilidade do modal
@@ -429,9 +419,9 @@ export default {
   },
   methods: {
     onPixGerado(pixTransaction) {
-        console.log("Pix gerado:", pixTransaction);
-        // Mantenha o modal aberto. Você pode adicionar lógica aqui, se necessário,
-        // para exibir uma mensagem de sucesso ou realizar outras ações.
+      console.log("Pix gerado:", pixTransaction);
+      // Mantenha o modal aberto. Você pode adicionar lógica aqui, se necessário,
+      // para exibir uma mensagem de sucesso ou realizar outras ações.
     },
 
     reservarAcomodacao(acomodacao) {
