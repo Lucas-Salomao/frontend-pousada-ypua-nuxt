@@ -269,7 +269,7 @@ export default {
             infoAdicional: `Reserva ${reserva.id}`
           };
 
-          const pixResponse = await this.$axios.post("https://pix-1045904631112.us-central1.run.app", pixData);
+          const pixResponse = await this.$axios.post(process.env.VUE_APP_PIX_ENDPOINT, pixData);
           this.pixTransaction = pixResponse.data;
           
           this.mostrarBotaoFechar = true;
