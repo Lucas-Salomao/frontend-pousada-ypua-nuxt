@@ -115,6 +115,10 @@ export default {
     host: '0.0.0.0'
   },
   env: {
-    apiEndpoint: process.env.VUE_APP_API_ENDPOINT
+    _apiEndpoint: process.env.VUE_APP_API_ENDPOINT,
+    _merchantName: process.env.VUE_APP_PIX_MERCHANT_NAME,
+    _merchantCity: process.env.VUE_APP_PIX_MERCHANT_CITY,
+    _pixKey: process.env.VUE_APP_PIX_KEY,
+    _pixEndpoint: process.env.VUE_APP_PIX_ENDPOINT,
   }
 }

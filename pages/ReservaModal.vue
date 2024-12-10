@@ -262,14 +262,14 @@ export default {
 
           // Cria a transação Pix
           const pixData = {
-            merchantName: process.env.VUE_APP_PIX_MERCHANT_NAME,
-            merchantCity: process.env.VUE_APP_PIX_MERCHANT_CITY,
-            pixKey: process.env.VUE_APP_PIX_KEY,
+            merchantName: _merchantName,
+            merchantCity: _merchantCity,
+            pixKey: _pixKey,
             transactionAmount: this.valorTotal,
             infoAdicional: `Reserva ${reserva.id}`
           };
 
-          const pixResponse = await this.$axios.post(process.env.VUE_APP_PIX_ENDPOINT, pixData);
+          const pixResponse = await this.$axios.post(_pixEndpoint, pixData);
           this.pixTransaction = pixResponse.data;
           
           this.mostrarBotaoFechar = true;
