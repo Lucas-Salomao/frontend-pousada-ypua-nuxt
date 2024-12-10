@@ -106,7 +106,7 @@ export default {
       menuSaida: false,
       pixTransaction: null, // Novo campo para armazenar a transação Pix
       mostrarBotaoFechar: false,
-      endpointPix="https://pix-1045904631112.us-central1.run.app",
+      endpointPix:"https://pix-1045904631112.us-central1.run.app",
     };
   },
   computed: {
