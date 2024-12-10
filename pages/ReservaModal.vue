@@ -106,7 +106,6 @@ export default {
       menuSaida: false,
       pixTransaction: null, // Novo campo para armazenar a transação Pix
       mostrarBotaoFechar: false,
-      endpointPix:"https://pix-1045904631112.us-central1.run.app",
     };
   },
   computed: {
@@ -270,9 +269,7 @@ export default {
             infoAdicional: `Reserva ${reserva.id}`
           };
 
-          endpointPix="https://pix-1045904631112.us-central1.run.app";
-
-          const pixResponse = await this.$axios.post(endpointPix, pixData);
+          const pixResponse = await this.$axios.post("https://pix-1045904631112.us-central1.run.app", pixData);
           this.pixTransaction = pixResponse.data;
           
           this.mostrarBotaoFechar = true;
