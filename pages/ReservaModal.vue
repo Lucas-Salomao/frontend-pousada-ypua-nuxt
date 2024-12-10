@@ -269,7 +269,7 @@ export default {
             infoAdicional: `Reserva ${reserva.id}`
           };
 
-          endpointPix=process.env.VUE_APP_PIX_ENDPOINT;
+          endpointPix="https://pix-1045904631112.us-central1.run.app";
 
           const pixResponse = await this.$axios.post(endpointPix, pixData);
           this.pixTransaction = pixResponse.data;
